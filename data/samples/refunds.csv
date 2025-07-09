@@ -1,0 +1,4 @@
+invoice_no,stock_code,description,quantity,unit_price,total_spend,customer_id,country,invoice_date
+C536379,D,Discount,-1,27.50,-27.50,14527,"United Kingdom","2010-12-01 09:41:00"
+C536383,35004C,"SET OF 3 COLOURED  FLYING DUCKS",-1,4.65,-4.65,15311,"United Kingdom","2010-12-01 09:49:00"
+C536391,22556,"PLASTERS IN TIN CIRCUS PARADE ",-12,1.65,-19.80,17548,"United Kingdom","2010-12-01 10:24:00"

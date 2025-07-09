@@ -1,0 +1,4 @@
+invoice_no,invoice_date,invoice_time,customer_id,country,overall_quantity,overall_spend,transaction_types
+536365,2010-12-01,08:26:00,17850,"United Kingdom",40,139.12,Purchase
+536366,2010-12-01,08:28:00,17850,"United Kingdom",12,22.20,Purchase
+536367,2010-12-01,08:34:00,13047,"United Kingdom",83,278.73,Purchase

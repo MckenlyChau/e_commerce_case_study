@@ -1,0 +1,4 @@
+stock_code,description,earliest_order_date,latest_order_date,overall_quantity,average_price,lowest_price,highest_price,overall_spend
+10002,"inflatable political globe",2010-12-01,2011-04-18,823,0.85,0.85,0.85,699.55
+10080,"groovy cactus inflatable",2011-02-27,2011-11-21,291,0.41,0.39,0.85,114.41
+10120,"doggy rubber",2010-12-03,2011-12-04,192,0.21,0.21,0.21,40.32

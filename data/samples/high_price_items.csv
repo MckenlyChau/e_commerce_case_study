@@ -1,0 +1,4 @@
+invoice_no,stock_code,description,quantity,unit_price,total_spend,customer_id,country,invoice_date
+C556445,M,Manual,-1,38970.00,-38970.00,15098,"United Kingdom","2011-06-10 15:31:00"
+C580605,AMAZONFEE,"AMAZON FEE",-1,17836.46,-17836.46,NULL,"United Kingdom","2011-12-05 11:36:00"
+C540117,AMAZONFEE,"AMAZON FEE",-1,16888.02,-16888.02,NULL,"United Kingdom","2011-01-05 09:55:00"

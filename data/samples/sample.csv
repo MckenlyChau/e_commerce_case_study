@@ -1,0 +1,4 @@
+invoice_no,stock_code,description,quantity,unit_price,total_spend,customer_id,country,invoice_date
+536365,85123A,"WHITE HANGING HEART T-LIGHT HOLDER",6,2.55,15.30,17850,"United Kingdom","2010-12-01 08:26:00"
+536365,71053,"WHITE METAL LANTERN",6,3.39,20.34,17850,"United Kingdom","2010-12-01 08:26:00"
+536365,84406B,"CREAM CUPID HEARTS COAT HANGER",8,2.75,22.00,17850,"United Kingdom","2010-12-01 08:26:00"

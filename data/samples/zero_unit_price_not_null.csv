@@ -1,0 +1,4 @@
+invoice_no,stock_code,description,quantity,unit_price,total_spend,customer_id,country,invoice_date
+537197,22841,"ROUND CAKE TIN VINTAGE GREEN",1,0.00,0.00,12647,"Germany","2010-12-05 14:02:00"
+539263,22580,"ADVENT CALENDAR GINGHAM SACK",4,0.00,0.00,16560,"United Kingdom","2010-12-16 14:36:00"
+539722,22423,"REGENCY CAKESTAND 3 TIER",10,0.00,0.00,14911,"EIRE","2010-12-21 13:45:00"

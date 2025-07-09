@@ -1,0 +1,4 @@
+customer_id,earliest_transaction_date,latest_transaction_date,customer_tenure_days,invoice_count,countries,overall_quantity,overall_spend,transaction_types
+12346,2011-01-18,2011-01-18,0,2,"United Kingdom",0,0.00,"Purchase, Refund"
+12347,2010-12-07,2011-12-07,365,7,"Iceland",2458,4310.00,Purchase
+12348,2010-12-16,2011-09-25,283,4,"Finland",2341,1797.24,"Postage, Purchase"

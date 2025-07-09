@@ -1,0 +1,4 @@
+invoice_no,stock_code,description,quantity,unit_price,total_spend,customer_id,country,invoice_date
+537032,21275,?,-30,0.00,0.00,NULL,"United Kingdom","2010-12-03 16:50:00"
+537425,84968F,check,-20,0.00,0.00,NULL,"United Kingdom","2010-12-06 15:35:00"
+537426,84968E,check,-35,0.00,0.00,NULL,"United Kingdom","2010-12-06 15:36:00"

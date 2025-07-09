@@ -1,0 +1,4 @@
+transaction_type,invoice_count,customer_count,overall_quantity,overall_spend
+"Bank Charges",11,10,11,165.00
+"Dotcom Postage",16,1,16,11906.36
+Manual,253,197,6933,53419.93

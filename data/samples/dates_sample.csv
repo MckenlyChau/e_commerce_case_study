@@ -1,0 +1,4 @@
+invoice_date,invoice_count,customer_count,countries,overall_quantity,overall_spend,transaction_types
+2010-12-01,127,98,"Australia, EIRE, France, Germany, Netherlands, Norway, United Kingdom",23931,45867.26,"Manual, Postage, Purchase, Refund"
+2010-12-02,160,117,"EIRE, Germany, United Kingdom",20790,45656.47,"Bank Charges, Postage, Purchase, Refund"
+2010-12-03,64,55,"Belgium, EIRE, France, Germany, Italy, Poland, Portugal, Spain, Switzerland, United Kingdom",11507,22553.38,"Manual, Postage, Purchase, Refund"

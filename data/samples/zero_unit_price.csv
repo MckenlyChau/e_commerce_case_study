@@ -1,0 +1,4 @@
+invoice_no,stock_code,description,quantity,unit_price,total_spend,customer_id,country,invoice_date
+536414,22139,,56,0.00,0.00,NULL,"United Kingdom","2010-12-01 11:52:00"
+536545,21134,,1,0.00,0.00,NULL,"United Kingdom","2010-12-01 14:32:00"
+536546,22145,,1,0.00,0.00,NULL,"United Kingdom","2010-12-01 14:33:00"
