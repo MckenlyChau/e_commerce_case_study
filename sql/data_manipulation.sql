@@ -1,11 +1,15 @@
--- Add Total Spend Column
+-- Calculate and Add Total Spend
+-- -- Add Column For Total Spend
 ALTER TABLE e_commerce_events ADD total_spend DECIMAL(10,2);
+-- -- Set Total Spend Column By Multiplying Unit Price By Quantity
 UPDATE e_commerce_events
 SET total_spend = unit_price * quantity;
+-- -- Move Total Spend To After Unit Price
 ALTER TABLE e_commerce_events 
 MODIFY COLUMN total_spend DECIMAL(10,2) AFTER unit_price;
 
--- Create table for invoices
+-- Invoice Summary Table
+-- -- Create Table Invoices
 CREATE TABLE invoices AS
 SELECT
   invoice_no,
@@ -20,6 +24,8 @@ FROM e_commerce_events
 GROUP BY invoice_no, invoice_date, customer_id, country
 ORDER BY invoice_no;
 
+-- Daily Performance Overview
+-- -- Create Table dates
 -- Create table for dates
 CREATE TABLE dates AS
 SELECT

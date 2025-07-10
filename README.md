@@ -2,18 +2,19 @@
 
 ## Contents
 
-- [Project Goal](#project-goal)
-- [Dataset](#dataset)
-- [Tools Used](#tools-used)
-- [Database Setup](#database-setup)
-- [Data Import](#data-import)
-- [Data Audit](#data-audit)
-- [Data Cleaning](#data-cleaning)
-- [Data Exploration](#data-exploration)
-- [Data Enrichment](#data-enrichment)
-- [Data Analysis](#data-analysis)
-- [Data Visuals](#data-visuals)
-- [License](#-license)
+- [📌 Project Goal](#-project-goal)
+- [📊 Dataset](#-dataset)
+- [🧰 Tools Used](#-tools-used)
+- [🗂️ Database Setup](#-database-setup)
+- [📥 Data Import](#-data-import)
+- [🧪 Data Audit](#-data-audit)
+- [🧹 Data Cleaning](#-data-cleaning)
+- [🔄 Data Manipulation](#-data-manipulation)
+- [📊 Data Exploration](#-data-exploration)
+- [🧠 Data Enrichment](#-data-enrichment)
+- [📈 Data Analysis](#-data-analysis)
+- [📈 Data Visuals](#-data-visuals)
+- [📄 License](#-license)
 
 ## 📌 Project Goal  
 Analyze transaction data to extract insights into customer purchasing trends and behavior.
@@ -93,8 +94,20 @@ SET customer_id = NULLIF(@customer_id, '');
 ---
 
 ## 🧪 Data Audit
+### Contents
 
-### Date Range
+- [📅 Date Range](#-date-range)
+- [📊 High-Level Overview](#-high-level-overview)
+- [🔁 Detect Duplicates](#-detect-duplicates)
+- [⚠️ NULL Value Checks](#️-null-value-checks)
+- [💸 Zero Unit Price](#-zero-unit-price)
+- [💰 High-Value Items](#-high-value-items)
+- [🔄 Refund Invoices (Start with "C")](#-refund-invoices-start-with-c)
+- [🔻 Negative Quantities Without ‘C’ Invoices](#-negative-quantities-without-c-invoices)
+- [🧪 Sample Checks](#-sample-checks)
+- [🔣 Non-Item Stock Codes](#-non-item-stock-codes)
+
+### 📅 Date Range
 ```sql
 SELECT MIN(invoice_date), MAX(invoice_date)
 FROM e_commerce_events;
@@ -104,7 +117,7 @@ FROM e_commerce_events;
 |2010-12-01 08:26:00|2011-12-09 12:50:00|
 
 
-### High-Level Overview
+### 📊 High-Level Overview
 ```sql
 SELECT 
   COUNT(*) AS total_rows,
@@ -117,7 +130,7 @@ FROM e_commerce_events;
 |----------|---------------|----------------|---------------|
 |541909    |25900          |4372            |3958           |
 
-### Detect Duplicates
+### 🔁 Detect Duplicates
 ```sql
 WITH dup_cte AS (
   SELECT COUNT(*) AS dup_count
@@ -133,7 +146,7 @@ FROM dup_cte;
 |5268          |
 
 
-### NULL Values
+### ⚠️ NULL Value Checks
 ```sql
 SELECT *
 FROM e_commerce_events
@@ -154,7 +167,7 @@ OR invoice_date IS NULL;
 
 **Insight:** Only `customer_id` contains NULLs.
 
-### Zero Unit Price
+### 💸 Zero Unit Price
 ```sql
 SELECT *
 FROM e_commerce_events
@@ -181,7 +194,7 @@ WHERE unit_price = 0 AND customer_id IS NOT NULL;
 
 **Insight:** Valid customers with free items — likely promotional.
 
-### High price items
+### 💰 High-Value Items
 ```sql
 SELECT *
 FROM e_commerce_events
@@ -197,7 +210,7 @@ LIMIT 200;
 
 ***Insight:** Highest value items include mainly Manuals and AMAZON fees. They also have negative quantities. Will consider deleting.
 
-### Refunds (Invoices with 'C')
+### 🔄 Refund Invoices (Start with "C")
 ```sql
 SELECT * FROM e_commerce_events WHERE invoice_no LIKE 'C%';
 ```
@@ -209,7 +222,7 @@ SELECT * FROM e_commerce_events WHERE invoice_no LIKE 'C%';
 
 **Insight:** Negative `quantity`, likely refunds.
 
-### Negative Quantities Without 'C'
+### 🔻 Negative Quantities Without ‘C’ Invoices
 ```sql
 SELECT * 
 FROM e_commerce_events 
@@ -223,7 +236,7 @@ WHERE quantity < 0 AND invoice_no NOT LIKE 'C%';
 
 ***Insight:** Possible damaged goods or stock adjustments.
 
-### Sample Product Checks
+### 🧪 Sample Checks
 ```sql
 SELECT * FROM e_commerce_events WHERE stock_code = '85175';
 SELECT * FROM e_commerce_events WHERE invoice_no = '541993';
@@ -231,7 +244,7 @@ SELECT * FROM e_commerce_events WHERE stock_code = '21035';
 ```
 **Insight:** Pricing anomalies and missing `customer_id` suggest outliers.
 
-### Stock Codes For non-itemproducts
+### 🔣 Non-Item Stock Codes
 ```sql
 SELECT DISTINCT stock_code
 FROM e_commerce_events
@@ -253,7 +266,24 @@ WHERE stock_code NOT REGEXP '[0-9]';
 
 ## 🧹 Data Cleaning
 
-### Reformat `invoice_date`
+### Contents
+
+- [🕒 Convert Date Formats](#-convert-date-formats)
+- [💾 Create Backup Before Modifications](#-create-backup-before-modifications)
+- [🆔 Add Surrogate Row Identifier](#-add-surrogate-row-identifier)
+- [🗑️ Remove Duplicate Records](#️-remove-duplicate-records)
+- [🚫 Remove Rows Without Customer ID](#-remove-rows-without-customer-id)
+- [🚫 Remove Free or Promotional Item](#-remove-free-or-promotional-item)
+- [🔄 Categorize Transaction Type](#-categorize-transaction-type)
+- [🔧 Clean Invoice Numbers](#-clean-invoice-numbers)
+- [✂️ Normalize Product Descriptions](#️-normalize-product-descriptions)
+- [⏱️ Separate Date and Time Fields](#️-separate-date-and-time-fields)
+- [🧹 Column Order Cleanup](#-column-order-cleanup)
+- [✅ Confirm Column Data Types](#-confirm-column-data-types)
+- [🧾 High-Level Metrics After Cleaning](#-high-level-metrics-after-cleaning)
+- [🚀 Add Indexes for Query Optimization](#-add-indexes-for-query-optimization)
+
+### 🕒 Convert Date Formats
 ```sql
 ALTER TABLE e_commerce_events ADD invoice_dt DATETIME;
 UPDATE e_commerce_events
@@ -262,21 +292,21 @@ ALTER TABLE e_commerce_events DROP COLUMN invoice_date;
 ALTER TABLE e_commerce_events CHANGE invoice_dt invoice_date DATETIME;
 ```
 
-### Backup Table
+### 💾 Create Backup Before Modifications
 ```sql
 CREATE TABLE e_commerce_events_backup AS
 SELECT * FROM e_commerce_events;
 ```
 ***Insight:** Backing up table before any major changes.
 
-### Create Surrogate id for rows
+### 🆔 Add Surrogate Row Identifier
 ```sql
 ALTER TABLE e_commerce_events
 ADD COLUMN id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
 ```
 ***Insight:** Applying surrogate id in order to make eliminating duplicates easier
 
-### Delete Duplicate Rows
+### 🗑️ Remove Duplicate Records
 ```sql
 WITH duplicate_ids AS (
   SELECT MIN(id) AS keep_id
@@ -289,21 +319,21 @@ WHERE id NOT IN (
 );
 ```
 
-### Delete rows with NULL customer_id
+### 🚫 Remove Rows Without Customer ID
 ```sql
 DELETE FROM e_commerce_events
 WHERE customer_id IS NULL;
 ```
 ***Insight:** Unable to attribute to a customer so elimated to remove bad data
 
-### Delete rows with 0.00 unit_price
+### 🚫 Remove Free or Promotional Item
 ```sql
 DELETE FROM e_commerce_events
 WHERE unit_price = 0;
 ```
 ***Insight:** As these are additive items they are not necessary for analysis.
 
-### Create Column for Transaction Type
+### 🔄 Categorize Transaction Type
 ```sql
 ALTER TABLE e_commerce_events ADD transaction_type VARCHAR(20);
 UPDATE e_commerce_events
@@ -325,7 +355,7 @@ WHERE stock_code IN ('POST', 'D', 'M', 'BANK CHARGES', 'DOT', 'CRUK', 'PADS');
 ```
 ***Insight:** Adjusted for clarity
 
-### Remove c from invoice_no
+### 🔧 Clean Invoice Numbers
 ```sql
 UPDATE e_commerce_events
 SET invoice_no = 
@@ -338,13 +368,13 @@ MODIFY invoice_no INT;
 ```
 ***Insight:** Adjusted for clarity
 
-### Trimmed and lowercased description for uniformity
+### ✂️ Normalize Product Descriptions
 ```sql
 UPDATE e_commerce_events
 SET description = LOWER(TRIM(description));
 ```
 
-### Splitting date and time
+### ⏱️ Separate Date and Time Fields
 ```sql
 ALTER TABLE e_commerce_events
 ADD COLUMN invoice_date_only DATE,
@@ -361,7 +391,7 @@ CHANGE invoice_time_only invoice_time TIME;
 ```
 ***Insight:** Separated for easier analysis.
 
-### Rearange for clarity
+### 🧹 Column Order Cleanup
 ```sql
 ALTER TABLE e_commerce_events 
 MODIFY COLUMN invoice_date DATE AFTER invoice_no;
@@ -373,14 +403,14 @@ ALTER TABLE e_commerce_events
 MODIFY COLUMN country VARCHAR(50) AFTER customer_id;
 ```
 
-### Validating Column types
+### ✅ Confirm Column Data Types
 ```sql
 DESCRIBE e_commerce_events;
 ```
 
 **Insight:** All data types are correct for their columns
 
-### High-Level Overview After Cleaning
+### 🧾 High-Level Metrics After Cleaning
 ```sql
 SELECT 
   COUNT(*) AS total_rows,
@@ -393,7 +423,7 @@ FROM e_commerce_events;
 |----------|---------------|----------------------------------|---------------|
 |401560    |22186          |4371                              |3677           |
 
-### Creating Indexs for main search columns
+### 🚀 Add Indexes for Query Optimization
 ```sql
 CREATE INDEX idx_customer_id ON e_commerce_events(customer_id);
 CREATE INDEX idx_invoice_no ON e_commerce_events(invoice_no);
@@ -406,7 +436,19 @@ CREATE INDEX idx_invoice_date ON e_commerce_events(invoice_date);
 
 ## 🔄 Data Manipulation
 
-### Add Total Spend Column
+### Contents
+
+- [➕ Calculate and Add Total Spend](#-calculate-and-add-total-spend)
+- [🧾 Invoice Summary Table](#-invoice-summary-table)
+- [📆 Daily Performance Overview](#-daily-performance-overview)
+- [👥 Customer Activity Summary](#-customer-activity-summary)
+- [✅ Active Customers Non-Zero Spend](#-active-customers-non-zero-spend)
+- [📦 Product Master Table](#-product-master-table)
+- [🌍 Country-Level Aggregates](#-country-level-aggregates)
+- [🔄 Transaction Type Breakdown](#-transaction-type-breakdown)
+- [🔑 Add Primary Keys to Summary Tables](#-add-primary-keys-to-summary-tables)
+
+### ➕ Calculate and Add Total Spend
 ```sql
 ALTER TABLE e_commerce_events ADD total_spend DECIMAL(10,2);
 UPDATE e_commerce_events
@@ -415,7 +457,7 @@ ALTER TABLE e_commerce_events
 MODIFY COLUMN total_spend DECIMAL(10,2) AFTER unit_price;
 ```
 
-### Create table for invoices
+### 🧾 Invoice Summary Table
 ```sql
 CREATE TABLE invoices AS
 SELECT
@@ -437,7 +479,7 @@ ORDER BY invoice_no;
 |536366    |2010-12-01  |08:28:00                          |17850      |United Kingdom |12              |22.20        |Purchase         |
 |536367    |2010-12-01  |08:34:00                          |13047      |United Kingdom |83              |278.73       |Purchase         |
 
-### Create table for dates
+### 📆 Daily Performance Overview
 ```sql
 CREATE TABLE dates AS
 SELECT
@@ -459,7 +501,7 @@ ORDER BY invoice_date;
 |2010-12-03  |64           |55            |Belgium , EIRE , France , Etc  |11507           |22553.38     |Manual, Postage, Purchase, Refund      |
 
 
-### Create table for customers
+###	👥 Customer Activity Summary
 ```sql
 CREATE TABLE customers AS
 SELECT
@@ -484,7 +526,7 @@ ORDER BY customer_id;
 
 **Insight:** Several customers have an overall_spend of 0, which likely indicates full refunds or fully reversed transactions. Similarly, an overall_quantity of 0 may reflect historical refunds or data entry anomalies. Since these records do not provide meaningful analytical value, they may be excluded in later stages of the analysis.
 
-### Create table for valid customers
+### ✅ Active Customers Non-Zero Spend
 ```sql
 CREATE TABLE valid_customers AS
 SELECT *
@@ -500,7 +542,7 @@ AND overall_quantity > 0;
 
 **Insight:** This cleaned subset of customers is well-suited for RFM (Recency, Frequency, Monetary) analysis, as it ensures all included records reflect meaningful purchasing behavior.
 
-### Create table for products
+### 📦 Product Master Table
 ```sql
 CREATE TABLE products AS
 WITH mode_cte AS (
@@ -549,7 +591,7 @@ ORDER BY td.stock_code;
 
 ***Insight:** Standardized product descriptions by assigning the most frequently used description per `stock_code`, ensuring consistency across records for accurate aggregation and analysis.
 
-### Create table for countries
+### 🌍 Country-Level Aggregates
 ```sql
 CREATE TABLE countries AS
 SELECT
@@ -573,7 +615,7 @@ ORDER BY country;
 |Bahrain  |2011-05-09               |2011-05-19             |2            |2              |260             |548.40       |274.20                |Purchase         |
 
 
-### Create table for transaction_types
+### 🔄 Transaction Type Breakdown
 ```sql
 CREATE TABLE transaction_types AS
 SELECT
@@ -592,7 +634,7 @@ ORDER BY transaction_type;
 |Dotcom Postage  |16           |1                                 |16              |11906.36       |
 |Manual          |253          |197                               |6933            |53419.93       |
 
-### Create PRIMARY KEYs for created tables
+### 🔑 Add Primary Keys to Summary Tables
 ```sql
 ALTER TABLE invoices ADD PRIMARY KEY (invoice_no);
 ALTER TABLE dates ADD PRIMARY KEY (invoice_date);
@@ -606,8 +648,23 @@ ALTER TABLE transaction_types ADD PRIMARY KEY (transaction_type);
 
 ## 📊 Data Exploration
 
-### Customers
-#### Investigate top spenders
+### Contents
+
+- [👥 EX-Customers](#-ex-customers)
+- [📦 EX-Products](#-ex-products)
+- [🧾 EX-Invoices](#-ex-invoices)
+- [🌍 EX-Country](#-ex-country)
+- [📅 EX-Dates](#-ex-dates)
+
+
+### 👥 EX-Customers
+
+#### Contents
+
+- [💰 Top Customer Spenders](#-top-customer-spenders)
+- [🔍 Sample Top Customers](#-sample-top-customers)
+
+#### 💰 Top Customer Spenders
 ```sql
 SELECT customer_id,
 	customer_tenure_days,
@@ -629,7 +686,7 @@ LIMIT 5;
 
 **Insight:** Several customers consistently exhibit high order volumes and total spending, indicating potential wholesale buyers or bulk purchasers.
 
-### Investigate customer_id 14646, 18102, 17450
+### 🔍 Sample Top Customers
 ```sql
 SELECT * FROM e_commerce_events WHERE customer_id = 14646;
 SELECT * FROM e_commerce_events WHERE customer_id = 18102;
@@ -637,8 +694,14 @@ SELECT * FROM e_commerce_events WHERE customer_id = 17450;
 ```
 **Insight:** Many of their transactions involve purchasing 100+ units of individual items, reinforcing the likelihood that they are wholesale customers. Further analysis is needed to distinguish wholesalers from regular retail buyers.
 
-### Products
-#### Investigate top_selling items By Spend
+### 📦 EX-Products
+
+#### Contents
+
+- [🏆 Top Products by Revenue](#-top-products-by-revenue)
+- [📦 Top Products by Volume](#-top-products-by-volume)
+
+#### 🏆 Top Products by Revenue
 ```sql
 SELECT stock_code,
 	description,
@@ -659,7 +722,7 @@ ORDER BY overall_spend DESC;
 
 **Insight:** The Regency Cakestand ranks among the top items by `overall_spend`, despite having a lower quantity sold compared to others. This suggests it is a high-value item. Categorizing products into high-end and low-end segments based on `usual_price` may provide more meaningful insights during analysis.
 
-### Investigate top selling items By quantity
+### 📦 Top Products by Volume
 ```sql
 SELECT stock_code,
 	description,
@@ -680,8 +743,14 @@ ORDER BY overall_quantity DESC;
 
 **Insight:** Most high-volume products are priced below $1, with only a few exceptions. This reinforces the value of segmenting items into low-end and high-end categories based on `usual_price` for more precise product-level analysis.
 
-### Invoices
-#### Investigate Large Batch orders
+### 🧾 EX-Invoices
+
+#### Contents
+
+- [📊 Largest Orders by Quantity](#-largest-orders-by-quantitys)
+- [↩️ Largest Refunds by Quantity](#️-largest-refunds-by-quantity)
+
+#### 📊 Largest Orders by Quantitys
 ```sql
 SELECT * 
 FROM invoices
@@ -693,7 +762,7 @@ ORDER BY overall_quantity DESC;
 |541431    |2011-01-18                |10:01:00    |12346      |United Kingdom |74215           |77183.60     |Purchase         |
 |556917    |2011-06-15                |13:37:00    |12415      |Australia      |15049           |22775.93     |Purchase         |
 
-#### Investigate Large Batch refunds
+#### ↩️ Largest Refunds by Quantity
 ```sql
 SELECT * 
 FROM invoices
@@ -707,8 +776,17 @@ ORDER BY overall_quantity;
 
 **Insight:** This is the inverse of large orders by sorting in ascending quantity. Numerous large invoices appear to be refunded shortly after the original purchase. It would be beneficial to identify and label fully refunded orders to improve accuracy in customer and revenue analysis.
 
-### Country
-#### Highest invoice count per country
+### 🌍 EX-Country
+
+#### Contents
+
+- [🌍 Top Countries by Invoices](#-top-countries-by-invoices)
+- [👥 Top Countries by Customers](#-top-countries-by-customers)
+- [📦 Top Countries by Units Sold](#-top-countries-by-units-sold)
+- [💸 Top Countries by Total Spend](#-top-countries-by-total-spend)
+- [🧾 Top Countries by Avg. Spend per Customer](#-top-countries-by-avg-spend-per-customer)
+
+#### 🌍 Top Countries by Invoices
 ```sql
 SELECT country,
 	invoice_count,
@@ -725,7 +803,7 @@ ORDER BY invoice_count DESC;
 |Germany        |603                       |95            |117339          |221509.47    |2331.68               |
 |France         |458                       |87            |109805          |196626.05    |2260.07               |
 
-#### Highest Customer count per country
+#### 👥 Top Countries by Customers
 ```sql
 SELECT country,
 	invoice_count,
@@ -742,7 +820,7 @@ ORDER BY customer_count DESC;
 |Germany        |603                       |95            |117339          |221509.47    |2331.68               |
 |France         |458                       |87            |109805          |196626.05    |2260.07               |
 
-#### Highest Quantity count per country
+#### 📦 Top Countries by Units Sold
 ```sql
 SELECT country,
 	invoice_count,
@@ -759,7 +837,7 @@ ORDER BY overall_quantity DESC;
 |Netherlands    |100                       |9             |199552          |284661.54    |31629.06              |
 |EIRE           |319                       |3             |135937          |250001.78    |83333.93              |
 
-#### Highest spend per country
+#### 💸 Top Countries by Total Spend
 ```sql
 SELECT country,
 	invoice_count,
@@ -776,7 +854,7 @@ ORDER BY overall_spend DESC;
 |Netherlands    |100                       |9             |199552          |284661.54    |31629.06              |
 |EIRE           |319                       |3             |135937          |250001.78    |83333.93              |
 
-#### Highest spend per customer country
+#### 🧾 Top Countries by Avg. Spend per Customer
 ```sql
 SELECT country,
 	invoice_count,
@@ -795,8 +873,16 @@ ORDER BY avg_spend_per_customer DESC;
 
 **Insight:** Orders from the United Kingdom significantly surpass other countries in both quantity and total spend, which aligns with the dataset’s UK origin. Countries with fewer customers often exhibit a higher average spend per customer, suggesting that international sales may have been limited to wholesale buyers operating in their own domestic markets. It may be valuable to distinguish between domestic and international transactions for clearer segmentation.
 
-### Dates
-#### Investigate high invoice date
+### 📅 EX-Dates
+
+#### Contents
+
+- [🗓️ Dates with Most Invoices](#️-dates-with-most-invoices)
+- [👤 Dates with Most Customers](#-dates-with-most-customers)
+- [📈 Dates with Highest Sales Volume](#-dates-with-highest-sales-volume)
+- [💳 Dates with Highest Revenue](#-dates-with-highest-revenue)
+
+#### 🗓️ Dates with Most Invoices
 ```sql
 SELECT invoice_date,
 invoice_count,
@@ -812,7 +898,7 @@ ORDER BY invoice_count DESC;
 |2011-12-01  |164                       |149           |24582           |43634.37     |
 |2011-11-10  |161                       |139           |37780           |68321.01     |
 
-#### Investigate high customer date
+#### 👤 Dates with Most Customers
 ```sql
 SELECT invoice_date,
 invoice_count,
@@ -828,7 +914,7 @@ ORDER BY customer_count DESC;
 |2011-12-01  |164                       |149           |24582           |43634.37     |
 |2011-11-10  |161                       |139           |37780           |68321.01     |
 
-#### Investigate high quantity date
+#### 📈 Dates with Highest Sales Volume
 ```sql
 SELECT invoice_date,
 invoice_count,
@@ -844,7 +930,7 @@ ORDER BY overall_quantity DESC;
 |2011-09-20  |71                        |56            |42583           |103327.13    |
 |2011-12-07  |117                       |101           |40903           |68867.66     |
 
-#### Investigate high spend date
+#### 💳 Dates with Highest Revenue
 ```sql
 SELECT invoice_date,
 invoice_count,
@@ -874,8 +960,20 @@ ORDER BY overall_spend DESC;
 
 ## 🧠 Data Enrichment
 
-### Customer
-#### Add column for customer_types
+### Contents
+
+- [👥 EN-Customers](#-en-customers)
+- [📦 EN-Product](#-en-product)
+- [🗓️ EN-Dates](#️-en-dates)
+
+### 👥 EN-Customers
+
+### Contents
+
+- [🧠 Customer Segmentation by Type](#-customer-segmentation-by-type)
+- [📈 Customer Segmentation by Engagement](#-customer-segmentation-by-engagement)
+
+#### 🧠 Customer Segmentation by Type
 ```sql
 ALTER TABLE valid_customers
 ADD COLUMN customer_type VARCHAR(20);
@@ -894,7 +992,7 @@ SET customer_type =
 ```
 **Insight:** Customers with an overall quantity exceeding 5,000, an average of more than 100 items per invoice, and total spending above 10,000 strongly indicate wholesale purchasing behavior. Meanwhile, those with over 2,000 items, an average above 50 per invoice, and spending above 1,000 suggest micro-wholesale activity. These thresholds help distinguish wholesalers from regular retail customers by identifying consistent patterns in purchase volume and value.
 
-### Add Column for Customer Level
+### 📈 Customer Segmentation by Engagement
 ```sql
 ALTER TABLE valid_customers
 ADD COLUMN customer_level VARCHAR(20);
@@ -911,8 +1009,13 @@ END;
 ```
 **Insight:** Customers are categorized into engagement levels based on the number of days between their first and last transactions `customer_tenure_days` and their total number of invoices `invoice_count`. This segmentation helps classify them as One-Time, Short-Term, Medium-Term, Recurrent, or Occasional customers, providing a clearer understanding of purchasing behavior and loyalty.
 
-### Product
-#### Add Column for Product level
+### 📦 EN-Product
+
+### Contents
+
+- [💰 Product Tier Assignment by Price](#-product-tier-assignment-by-price)
+
+#### 💰 Product Tier Assignment by Price
 ```sql
 ALTER TABLE products
 ADD COLUMN product_level VARCHAR(20);
@@ -929,8 +1032,14 @@ SET product_level =
 ```
 **Insight:** Products are categorized into tiers—Premium, High, Mid, Standard, and Low—based on their `usual_price` to reflect relative pricing levels and support more granular product analysis.
 
-### Dates
-#### Add columns for month_name and month_number
+### 🗓️ EN-Dates
+
+### Contents
+
+- [📅 Add Month and Month Number](#-add-month-and-month-number)
+- [📊 Monthly Trends Summary Table](#-monthly-trends-summary-table)
+
+#### 📅 Add Month and Month Number
 ```sql
 ALTER TABLE dates
 ADD COLUMN month_number TINYINT,
@@ -947,7 +1056,7 @@ MODIFY COLUMN month_name VARCHAR(10) AFTER month_number;
 ```
 **Insight:** Added month_number and month_name columns to enhance time-based analysis and enable proper chronological sorting in monthly reports.
 
-#### Create Table for Months
+#### 📊 Monthly Trends Summary Table
 ```sql
 CREATE TABLE months AS
 SELECT 
@@ -970,7 +1079,7 @@ ORDER BY month_number;
 **Insight:** A dedicated months table was created to facilitate clearer analysis of monthly trends in customer activity, order volume, and revenue. This helps uncover seasonality and performance patterns across the year.
 
 
-## 📈 Next Steps
+## Next Steps
 - Seperate Wholesellers from customers. DONE
 - Create categories for high end and low end items. DONE
 - Label refunded orders 

@@ -1,4 +1,4 @@
--- Date range check
+-- Date Range
 SELECT MIN(invoice_date), MAX(invoice_date)
 FROM e_commerce_events;
 
@@ -20,7 +20,7 @@ WITH dup_cte AS (
 SELECT SUM(dup_count - 1) AS redundant_rows
 FROM dup_cte;
 
--- NULL values
+-- NULL Value Checks
 Select *
 FROM e_commerce_events
 WHERE invoice_no IS NULL
@@ -43,18 +43,18 @@ FROM e_commerce_events
 WHERE unit_price = 0
 AND customer_id IS NOT NULL;
 
--- High price items
+-- High-Value Items
 SELECT *
 FROM e_commerce_events
 ORDER BY unit_price DESC
 LIMIT 200;
 
--- Refunds (Invoices with 'C')
+-- Refund Invoices (Start with "C")
 SELECT * 
 FROM e_commerce_events 
 WHERE invoice_no LIKE 'c%';
 
--- Negative Quantities Without 'C'
+-- Negative Quantities Without ‘C’ Invoices
 SELECT * 
 FROM e_commerce_events 
 WHERE quantity < 0
@@ -75,7 +75,7 @@ SELECT *
 FROM e_commerce_events 
 WHERE stock_code = 21035;
 
--- Stock Codes For non-products
+-- Non-Item Stock Codes
 SELECT DISTINCT stock_code
 FROM e_commerce_events
 WHERE stock_code NOT REGEXP '[0-9]';
