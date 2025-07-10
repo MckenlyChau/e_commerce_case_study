@@ -59,31 +59,43 @@ AND overall_quantity > 0;
 
 -- Create table for products
 CREATE TABLE products AS
+WITH mode_cte AS (
+  SELECT stock_code, unit_price AS usual_price,
+         ROW_NUMBER() OVER (PARTITION BY stock_code ORDER BY COUNT(*) DESC) AS rn
+  FROM e_commerce_events
+  GROUP BY stock_code, unit_price
+),
+top_descriptions AS (
+  SELECT stock_code, description
+  FROM (
+    SELECT stock_code, description,
+           ROW_NUMBER() OVER (PARTITION BY stock_code ORDER BY COUNT(*) DESC) AS rn
+    FROM e_commerce_events
+    GROUP BY stock_code, description
+  ) ranked
+  WHERE rn = 1
+),
+mode_filtered AS (
+  SELECT stock_code, usual_price
+  FROM mode_cte
+  WHERE rn = 1
+)
 SELECT 
-  rd.stock_code,
-  rd.description,
+  td.stock_code,
+  td.description,
   MIN(e.invoice_date) AS earliest_order_date,
   MAX(e.invoice_date) AS latest_order_date,
   SUM(e.quantity) AS overall_quantity,
   ROUND(AVG(e.unit_price), 2) AS average_price,
   MIN(e.unit_price) AS lowest_price,
   MAX(e.unit_price) AS highest_price,
+  mf.usual_price,
   SUM(e.total_spend) AS overall_spend
-FROM (
-  SELECT stock_code, description
-  FROM (
-    SELECT 
-      stock_code, 
-      description,
-      ROW_NUMBER() OVER (PARTITION BY stock_code ORDER BY COUNT(*) DESC) AS rn
-    FROM e_commerce_events
-    GROUP BY stock_code, description
-  ) ranked
-  WHERE rn = 1
-) rd
-JOIN e_commerce_events e ON rd.stock_code = e.stock_code
-GROUP BY rd.stock_code, rd.description
-ORDER BY rd.stock_code;
+FROM e_commerce_events e
+JOIN top_descriptions td ON e.stock_code = td.stock_code
+JOIN mode_filtered mf ON e.stock_code = mf.stock_code
+GROUP BY td.stock_code, td.description, mf.usual_price
+ORDER BY td.stock_code;
 
 -- Create table for countries
 CREATE TABLE countries AS

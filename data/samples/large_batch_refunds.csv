@@ -1,0 +1,4 @@
+invoice_no,invoice_date,invoice_time,customer_id,country,overall_quantity,overall_spend,transaction_types
+581484,2011-12-09,09:27:00,16446,"United Kingdom",-80995,-168469.60,Refund
+541433,2011-01-18,10:17:00,12346,"United Kingdom",-74215,-77183.60,Refund
+536757,2010-12-02,14:23:00,15838,"United Kingdom",-9360,-280.80,Refund

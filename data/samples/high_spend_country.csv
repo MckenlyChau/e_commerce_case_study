@@ -1,0 +1,4 @@
+country,invoice_count,customer_count,overall_quantity,overall_spend,avg_spend_per_customer
+"United Kingdom",19854,3949,3982134,6747156.15,1708.57
+"Netherlands",100,9,199552,284661.54,31629.06
+"EIRE",319,3,135937,250001.78,83333.93
