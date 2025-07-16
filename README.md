@@ -1,6 +1,8 @@
 # 🛒 E-commerce Case Study
 
 ## Contents
+<details>
+<summary>Contents</summary>
 
 - [📌 Project Goal](#-project-goal)
 - [📊 Dataset](#-dataset)
@@ -16,13 +18,17 @@
 - [📈 Data Analysis](#-data-analysis)
 - [📈 Data Visuals](#-data-visuals)
 - [📄 License](#-license)
+</details>
 
 ## 📌 Project Goal  
 Analyze transaction data to extract insights into customer purchasing trends and behavior.
 
 ---
 
-## 📊 Dataset  
+## 📊 Dataset
+<details>
+<summary>Contents</summary>
+  
 - **Source**: [Kaggle - E-commerce Data](https://www.kaggle.com/datasets/carrie1/ecommerce-data/data)  
 - **Original Provider**: UCI Machine Learning Repository  
 - **Details**:  
@@ -35,16 +41,21 @@ To replicate:
 2. Export the Excel file as a **UTF-8 CSV**.
 3. Move the `.csv` to:  
    `C:\ProgramData\MySQL\MySQL Server 8.0\Uploads`
-
+</details>
 ---
 
 ## 🧰 Tools Used
+<details>
+<summary>Contents</summary>
+
 - **Database**: MySQL 8.0
 - **Environment**: MySQL Workbench, & Microsoft Excel (365)
-
+</details>
 ---
 
 ## 🗂️ Database Setup
+<details>
+<summary>Contents</summary>
 
 ### 1️⃣ Create the Database
 ```sql
@@ -52,6 +63,9 @@ CREATE DATABASE e_commerce_case_study;
 ```
 
 ### 2️⃣ Create the Table
+<details>
+<summary>Code</summary>
+
 ```sql
 CREATE TABLE e_commerce_events (
   invoice_no VARCHAR(20),
@@ -64,12 +78,18 @@ CREATE TABLE e_commerce_events (
   country VARCHAR(50)
 );
 ```
-
+</details>
+</details>
 ---
 
 ## 📥 Data Import
+<details>
+<summary>Contents</summary>
 
 ### Load Data from CSV
+<details>
+<summary>Code</summary>
+
 ```sql
 LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/data.csv'
 INTO TABLE e_commerce_events
@@ -81,6 +101,8 @@ IGNORE 1 ROWS
  unit_price, @customer_id, country)
 SET customer_id = NULLIF(@customer_id, '');
 ```
+</details>
+
 |invoice_no|stock_code|description                       |quantity|unit_price|total_spend|customer_id|country        |invoice_date       |
 |----------|----------|----------------------------------|--------|----------|-----------|-----------|---------------|-------------------|
 |536365    |85123A    |WHITE HANGING HEART T-LIGHT HOLDER|6       |2.55      |15.30      |17850      |United Kingdom |2010-12-01 08:26:00|
@@ -91,10 +113,12 @@ SET customer_id = NULLIF(@customer_id, '');
 - `customer_id` is set to `NULL` if empty
 - Some `unit_price` values below 0.01 were truncated
 - File must be encoded in **UTF-8**
-
 ---
+</details>
 
 ## 🧪 Data Audit
+<details>
+<summary>Contents</summary>
 
 - [📅 Date Range](#-date-range)
 - [📊 High-Level Overview](#-high-level-overview)
@@ -108,16 +132,23 @@ SET customer_id = NULLIF(@customer_id, '');
 - [🔣 Non-Item Stock Codes](#-non-item-stock-codes)
 
 ### 📅 Date Range
+<details>
+<summary>Code</summary>
+
 ```sql
 SELECT MIN(invoice_date), MAX(invoice_date)
 FROM e_commerce_events;
 ```
+</details>
+
 |MIN(invoice_date)  |MAX(invoice_date)  |
 |-------------------|-------------------|
 |2010-12-01 08:26:00|2011-12-09 12:50:00|
 
-
 ### 📊 High-Level Overview
+<details>
+<summary>Code</summary>
+
 ```sql
 SELECT 
   COUNT(*) AS total_rows,
@@ -126,11 +157,16 @@ SELECT
   COUNT(DISTINCT stock_code) AS unique_products
 FROM e_commerce_events;
 ```
+</details>
+
 |total_rows|unique_invoices|unique_customers|unique_products|
 |----------|---------------|----------------|---------------|
 |541909    |25900          |4372            |3958           |
 
 ### 🔁 Detect Duplicates
+<details>
+<summary>Code</summary>
+
 ```sql
 WITH dup_cte AS (
   SELECT COUNT(*) AS dup_count
@@ -141,12 +177,17 @@ WITH dup_cte AS (
 SELECT SUM(dup_count - 1) AS redundant_rows
 FROM dup_cte;
 ```
+</details>
+
 |redundant_rows|
 |--------------|
 |5268          |
 
 
 ### ⚠️ NULL Value Checks
+<details>
+<summary>Code</summary>
+
 ```sql
 SELECT *
 FROM e_commerce_events
@@ -159,6 +200,8 @@ OR customer_id IS NULL
 OR country IS NULL 
 OR invoice_date IS NULL;
 ```
+</details>
+
 |invoice_no|stock_code|description                    |quantity|unit_price|total_spend|customer_id|country        |invoice_date       |
 |----------|----------|-------------------------------|--------|----------|-----------|-----------|---------------|-------------------|
 |536414    |22139     |                               |56      |0.00      |0.00       |NULL       |United Kingdom |2010-12-01 11:52:00|
@@ -168,11 +211,16 @@ OR invoice_date IS NULL;
 **Insight:** Only `customer_id` contains NULLs.
 
 ### 💸 Zero Unit Price
+<details>
+<summary>Code</summary>
+
 ```sql
 SELECT *
 FROM e_commerce_events
 WHERE unit_price = 0;
 ```
+</details>
+
 |invoice_no|stock_code|description                    |quantity|unit_price|total_spend|customer_id|country        |invoice_date       |
 |----------|----------|-------------------------------|--------|----------|-----------|-----------|---------------|-------------------|
 |536414    |22139     |                               |56      |0.00      |0.00       |NULL       |United Kingdom |2010-12-01 11:52:00|
@@ -180,12 +228,16 @@ WHERE unit_price = 0;
 |536546    |22145     |                               |1       |0.00      |0.00       |NULL       |United Kingdom |2010-12-01 14:33:00|
 
 **Insight:** Often paired with NULL `customer_id`; may indicate bundled items.
+<details>
+<summary>Code</summary>
 
 ```sql
 SELECT *
 FROM e_commerce_events
 WHERE unit_price = 0 AND customer_id IS NOT NULL;
 ```
+</details>
+
 |invoice_no|stock_code|description                    |quantity|unit_price|total_spend|customer_id|country        |invoice_date       |
 |----------|----------|-------------------------------|--------|----------|-----------|-----------|---------------|-------------------|
 |537197    |22841     |ROUND CAKE TIN VINTAGE GREEN   |1       |0.00      |0.00       |12647      |Germany        |2010-12-05 14:02:00|
@@ -195,12 +247,17 @@ WHERE unit_price = 0 AND customer_id IS NOT NULL;
 **Insight:** Valid customers with free items — likely promotional.
 
 ### 💰 High-Value Items
+<details>
+<summary>Code</summary>
+
 ```sql
 SELECT *
 FROM e_commerce_events
 ORDER BY unit_price DESC
 LIMIT 200;
 ```
+</details>
+
 |invoice_no|stock_code|description                    |quantity|unit_price|total_spend|customer_id|country        |invoice_date       |
 |----------|----------|-------------------------------|--------|----------|-----------|-----------|---------------|-------------------|
 |C556445   |M         |Manual                         |-1      |38970.00  |-38970.00  |15098      |United Kingdom |2011-06-10 15:31:00|
@@ -211,9 +268,14 @@ LIMIT 200;
 ***Insight:** Highest value items include mainly Manuals and AMAZON fees. They also have negative quantities. Will consider deleting.
 
 ### 🔄 Refund Invoices (Start with "C")
+<details>
+<summary>Code</summary>
+
 ```sql
 SELECT * FROM e_commerce_events WHERE invoice_no LIKE 'C%';
 ```
+</details>
+
 |invoice_no|stock_code|description                    |quantity|unit_price|total_spend|customer_id|country        |invoice_date       |
 |----------|----------|-------------------------------|--------|----------|-----------|-----------|---------------|-------------------|
 |C536379   |D         |Discount                       |-1      |27.50     |-27.50     |14527      |United Kingdom |2010-12-01 09:41:00|
@@ -223,11 +285,16 @@ SELECT * FROM e_commerce_events WHERE invoice_no LIKE 'C%';
 **Insight:** Negative `quantity`, likely refunds.
 
 ### 🔻 Negative Quantities Without ‘C’ Invoices
+<details>
+<summary>Code</summary>
+
 ```sql
 SELECT * 
 FROM e_commerce_events 
 WHERE quantity < 0 AND invoice_no NOT LIKE 'C%';
 ```
+</details>
+
 |invoice_no|stock_code|description|quantity|unit_price|total_spend|customer_id|country        |invoice_date       |
 |----------|----------|-----------|--------|----------|-----------|-----------|---------------|-------------------|
 |537032    |21275     |?          |-30     |0.00      |0.00       |NULL       |United Kingdom |2010-12-03 16:50:00|
@@ -237,19 +304,29 @@ WHERE quantity < 0 AND invoice_no NOT LIKE 'C%';
 ***Insight:** Possible damaged goods or stock adjustments.
 
 ### 🧪 Sample Checks
+<details>
+<summary>Code</summary>
+
 ```sql
 SELECT * FROM e_commerce_events WHERE stock_code = '85175';
 SELECT * FROM e_commerce_events WHERE invoice_no = '541993';
 SELECT * FROM e_commerce_events WHERE stock_code = '21035';
 ```
+</details>
+
 **Insight:** Pricing anomalies and missing `customer_id` suggest outliers.
 
 ### 🔣 Non-Item Stock Codes
+<details>
+<summary>Code</summary>
+
 ```sql
 SELECT DISTINCT stock_code
 FROM e_commerce_events
 WHERE stock_code NOT REGEXP '[0-9]';
 ```
+</details>
+
 |stock_code  |
 |------------|
 |POST        |
@@ -261,10 +338,12 @@ WHERE stock_code NOT REGEXP '[0-9]';
 |CRUK        |
 
 ***Insight:** Includes POST(postage), D(discount), M(manual), BANK CHARGES, DOT(dotcom postage), CRUK(cruk commission), and PADS
-
+</details>
 ---
 
 ## 🧹 Data Cleaning
+<details>
+<summary>Contents</summary>
 
 - [🕒 Convert Date Formats](#-convert-date-formats)
 - [💾 Create Backup Before Modifications](#-create-backup-before-modifications)
@@ -283,6 +362,9 @@ WHERE stock_code NOT REGEXP '[0-9]';
 - [🚀 Add Indexes for Query Optimization](#-add-indexes-for-query-optimization)
 
 ### 🕒 Convert Date Formats
+<details>
+<summary>Code</summary>
+
 ```sql
 ALTER TABLE e_commerce_events ADD invoice_dt DATETIME;
 UPDATE e_commerce_events
@@ -290,22 +372,36 @@ SET invoice_dt = STR_TO_DATE(invoice_date, '%m/%d/%Y %H:%i');
 ALTER TABLE e_commerce_events DROP COLUMN invoice_date;
 ALTER TABLE e_commerce_events CHANGE invoice_dt invoice_date DATETIME; 
 ```
+</details>
 
 ### 💾 Create Backup Before Modifications
+<details>
+<summary>Code</summary>
+
 ```sql
 CREATE TABLE e_commerce_events_backup AS
 SELECT * FROM e_commerce_events;
 ```
+</details>
+
 ***Insight:** Backing up table before any major changes.
 
 ### 🆔 Add Surrogate Row Identifier
+<details>
+<summary>Code</summary>
+
 ```sql
 ALTER TABLE e_commerce_events
 ADD COLUMN id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
 ```
+</details>
+
 ***Insight:** Applying surrogate id in order to make eliminating duplicates easier
 
 ### 🗑️ Remove Duplicate Records
+<details>
+<summary>Code</summary>
+
 ```sql
 WITH duplicate_ids AS (
   SELECT MIN(id) AS keep_id
@@ -317,22 +413,36 @@ WHERE id NOT IN (
   SELECT keep_id FROM duplicate_ids
 );
 ```
+</details>
 
 ### 🚫 Remove Rows Without Customer ID
+<details>
+<summary>Code</summary>
+
 ```sql
 DELETE FROM e_commerce_events
 WHERE customer_id IS NULL;
 ```
+</details>
+
 ***Insight:** Unable to attribute to a customer so elimated to remove bad data
 
 ### 🚫 Remove Free or Promotional Item
+<details>
+<summary>Code</summary>
+
 ```sql
 DELETE FROM e_commerce_events
 WHERE unit_price = 0;
 ```
+</details>
+
 ***Insight:** As these are additive items they are not necessary for analysis.
 
 ### 🔄 Categorize Transaction Type
+<details>
+<summary>Code</summary>
+
 ```sql
 ALTER TABLE e_commerce_events ADD transaction_type VARCHAR(20);
 UPDATE e_commerce_events
@@ -349,16 +459,25 @@ SET transaction_type =
     ELSE 'Purchase'
   END;
 ```
+</details>
 
 ### 🧼 Clean Stock Code for Non-item Transactions
+<details>
+<summary>Code</summary>
+
 ```sql
 UPDATE e_commerce_events
 SET stock_code = NULL
 WHERE stock_code IN ('POST', 'D', 'M', 'BANK CHARGES', 'DOT', 'CRUK', 'PADS');
 ```
+</details>
+
 ***Insight:** Adjusted for clarity
 
 ### 🔧 Clean Invoice Numbers
+<details>
+<summary>Code</summary>
+
 ```sql
 UPDATE e_commerce_events
 SET invoice_no = 
@@ -369,15 +488,24 @@ SET invoice_no =
 ALTER TABLE e_commerce_events
 MODIFY invoice_no INT;
 ```
+</details>
+
 ***Insight:** Adjusted for clarity
 
 ### ✂️ Normalize Product Descriptions
+<details>
+<summary>Code</summary>
+
 ```sql
 UPDATE e_commerce_events
 SET description = LOWER(TRIM(description));
 ```
+</details>
 
 ### ⏱️ Separate Date and Time Fields
+<details>
+<summary>Code</summary>
+
 ```sql
 ALTER TABLE e_commerce_events
 ADD COLUMN invoice_date_only DATE,
@@ -392,9 +520,14 @@ ALTER TABLE e_commerce_events
 CHANGE invoice_date_only invoice_date DATE,
 CHANGE invoice_time_only invoice_time TIME; 
 ```
+</details>
+
 ***Insight:** Separated for easier analysis.
 
 ### 🧹 Column Order Cleanup
+<details>
+<summary>Code</summary>
+
 ```sql
 ALTER TABLE e_commerce_events 
 MODIFY COLUMN invoice_date DATE AFTER invoice_no;
@@ -405,15 +538,23 @@ MODIFY COLUMN customer_id INT AFTER invoice_time;
 ALTER TABLE e_commerce_events 
 MODIFY COLUMN country VARCHAR(50) AFTER customer_id;
 ```
+</details>
 
 ### ✅ Confirm Column Data Types
+<details>
+<summary>Code</summary>
+
 ```sql
 DESCRIBE e_commerce_events;
 ```
+</details>
 
 **Insight:** All data types are correct for their columns
 
 ### 🧾 High-Level Metrics After Cleaning
+<details>
+<summary>Code</summary>
+
 ```sql
 SELECT 
   COUNT(*) AS total_rows,
@@ -422,19 +563,26 @@ SELECT
   COUNT(DISTINCT stock_code) AS unique_products
 FROM e_commerce_events;
 ```
+</details>
+
 |total_rows|unique_invoices|unique_customers                  |unique_products|
 |----------|---------------|----------------------------------|---------------|
 |401560    |22186          |4371                              |3677           |
 
 ### 🚀 Add Indexes for Query Optimization
+<details>
+<summary>Code</summary>
+
 ```sql
 CREATE INDEX idx_customer_id ON e_commerce_events(customer_id);
 CREATE INDEX idx_invoice_no ON e_commerce_events(invoice_no); 
 CREATE INDEX idx_stock_code ON e_commerce_events(stock_code);
 CREATE INDEX idx_invoice_date ON e_commerce_events(invoice_date); 
 ```
-**Insight:** for ease of use when searching
+</details>
 
+**Insight:** for ease of use when searching
+</details>
 ---
 
 ## 🔄 Data Manipulation
@@ -1448,10 +1596,10 @@ UPDATE enriched_invoices
 
 **Note** Climate data was reviewed during the enrichment process but ultimately excluded from implementation due to the extensive effort required to apply it meaningfully within the project's scope.
 
-<details>
-<summary>📦 Finalized Tables</summary>
-
 ### 📦 Finalized Tables
+
+<details>
+<summary>Contents</summary>
 
 - [📊 RFM Model Table](#-rfm-model-table)
 - [🗺️ Country Level RFM Model Table](#️-country-level-rfm-model-table)
