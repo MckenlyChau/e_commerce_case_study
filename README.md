@@ -1448,6 +1448,9 @@ UPDATE enriched_invoices
 
 **Note** Climate data was reviewed during the enrichment process but ultimately excluded from implementation due to the extensive effort required to apply it meaningfully within the project's scope.
 
+<details>
+<summary>📦 Finalized Tables</summary>
+
 ### 📦 Finalized Tables
 
 - [📊 RFM Model Table](#-rfm-model-table)
@@ -2134,6 +2137,7 @@ UPDATE sub_region_rfm
 SET countries = REPLACE(REPLACE(TRIM(countries), '\r', ''), '\n', '');
 ```
 **Insight** Hidden Error found in country columns for tables. Cleaned out from rfm level tables.
+</details>
 
 ---
 
