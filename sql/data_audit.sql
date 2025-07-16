@@ -16,7 +16,7 @@ WITH dup_cte AS (
   FROM e_commerce_events
   GROUP BY invoice_no, stock_code, description, quantity, invoice_date, unit_price, customer_id, country
   HAVING COUNT(*) > 1
-)
+) -- CTE to Count Duplicates
 SELECT SUM(dup_count - 1) AS redundant_rows
 FROM dup_cte;
 

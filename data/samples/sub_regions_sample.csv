@@ -1,0 +1,4 @@
+sub_region_name,countries,earliest_transaction_date,latest_transaction_date,invoice_count,customer_count,overall_quantity,avg_spend_per_customer
+"Australia and New Zealand","Australia",2010-12-01,2011-11-24,69,9,83335,15223.31
+"Eastern Asia","Japan",2010-12-05,2011-12-06,28,8,25218,4417.58
+"Eastern Europe","Czech Republic, Poland",2010-12-03,2011-11-18,29,7,4245,1131.55

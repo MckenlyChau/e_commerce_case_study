@@ -1,0 +1,4 @@
+purchase_invoice,refund_invoice,customer_id,country,purchase_date,refund_date,days_between,purchase_quantity,refund_quantity,purchase_spend,refund_spend,refund_type
+537217,537406,15502,"United Kingdom",2010-12-05,2010-12-06,1,16,16,167.20,167.20,Full
+537249,538725,16955,"United Kingdom",2010-12-06,2010-12-14,8,20,20,33.00,25.00,Partial
+538501,538531,13715,"United Kingdom",2010-12-12,2010-12-13,1,2,2,11.90,7.50,Partial

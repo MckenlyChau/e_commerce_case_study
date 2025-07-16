@@ -1,0 +1,4 @@
+country_name,region_name,sub_region_name,earliest_transaction_date,latest_transaction_date,invoice_count,customer_count,overall_quantity,overall_spend,avg_spend_per_customer,transaction_types
+"Australia",Oceania,"Australia and New Zealand",2010-12-01,2011-11-24,69,9,83335,137009.77,15223.31,"Postage, Purchase, Refund"
+"Austria",Europe,"Western Europe",2010-12-15,2011-12-08,19,11,4827,10154.32,923.12,"Postage, Purchase, Refund"
+"Bahrain",Asia,"Western Asia",2011-05-09,2011-05-19,2,2,260,548.40,274.20,Purchase

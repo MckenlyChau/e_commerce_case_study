@@ -1,0 +1,4 @@
+region_name,countries,earliest_transaction_date,latest_transaction_date,invoice_count,customer_count,overall_quantity,avg_spend_per_customer
+Africa,"RSA",2011-10-13,2011-10-13,1,1,351,1002.31
+Americas,"Brazil, Canada, USA",2011-03-14,2011-12-08,14,9,4153,726.77
+Asia,"Bahrain, Cyprus, Israel, Japan, Lebanon, Saudi Arabia, Singapore, United Arab Emirates",2010-12-05,2011-12-06,72,27,42438,2540.14

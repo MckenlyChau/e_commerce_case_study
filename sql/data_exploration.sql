@@ -1,4 +1,4 @@
--- Investigate top spenders
+-- Top Customer Spenders
 SELECT customer_id,
 	customer_tenure_days,
 	invoice_count,
@@ -9,14 +9,12 @@ FROM e_commerce_case_study.valid_customers
 ORDER BY overall_spend DESC
 LIMIT 5;
 
--- investigate customer_id 14646
+-- Sample Top Customers
 SELECT * FROM e_commerce_events WHERE customer_id = 14646;
--- investigate customer_id 18102
 SELECT * FROM e_commerce_events WHERE customer_id = 18102;
--- investigate customer_id 17350
 SELECT * FROM e_commerce_events WHERE customer_id = 17450;
 
--- Investigate top selling items By Spend
+-- Top Products by Revenue
 SELECT stock_code,
 	description,
     overall_quantity,
@@ -28,7 +26,7 @@ SELECT stock_code,
 FROM products
 ORDER BY overall_spend DESC;
 
--- Investigate top selling items By quantity
+-- Top Products by Volume
 SELECT stock_code,
 	description,
     overall_quantity,
@@ -40,17 +38,17 @@ SELECT stock_code,
 FROM products
 ORDER BY overall_quantity DESC;
 
--- Investigate Large Batch orders
+-- Largest Orders by Quantity
 SELECT * 
 FROM invoices
 ORDER BY overall_quantity DESC;
 
--- Investigate Large Batch refunds
+-- Largest Refunds by Quantity
 SELECT * 
 FROM invoices
 ORDER BY overall_quantity;
 
--- Highest invoice count per country
+-- Top Countries by Invoices
 SELECT country,
 	invoice_count,
     customer_count,
@@ -60,7 +58,7 @@ SELECT country,
 FROM countries
 ORDER BY invoice_count DESC;
 
--- Highest Customer count per country
+-- Top Countries by Customers
 SELECT country,
 	invoice_count,
     customer_count,
@@ -70,7 +68,7 @@ SELECT country,
 FROM countries
 ORDER BY customer_count DESC;
 
--- Highest Quantity count per country
+-- Top Countries by Units Sold
 SELECT country,
 	invoice_count,
     customer_count,
@@ -80,7 +78,7 @@ SELECT country,
 FROM countries
 ORDER BY overall_quantity DESC;
 
--- Highest spend per country
+-- Top Countries by Total Spend
 SELECT country,
 	invoice_count,
     customer_count,
@@ -90,7 +88,7 @@ SELECT country,
 FROM countries
 ORDER BY overall_spend DESC;
 
--- Highest spend per customer country
+-- Top Countries by Avg. Spend per Customer
 SELECT country,
 	invoice_count,
     customer_count,
@@ -100,7 +98,7 @@ SELECT country,
 FROM countries
 ORDER BY avg_spend_per_customer DESC;
 
--- Investigate high invoice date
+-- Dates with Most Invoices
 SELECT invoice_date,
 invoice_count,
 customer_count,
@@ -109,7 +107,7 @@ overall_spend
 FROM e_commerce_case_study.dates
 ORDER BY invoice_count DESC;
 
--- Investigate high customer date
+-- Dates with Most Customers
 SELECT invoice_date,
 invoice_count,
 customer_count,
@@ -118,7 +116,7 @@ overall_spend
 FROM e_commerce_case_study.dates
 ORDER BY customer_count DESC;
 
--- Investigate high quantity date
+-- Dates with Highest Sales Volume
 SELECT invoice_date,
 invoice_count,
 customer_count,
@@ -127,7 +125,7 @@ overall_spend
 FROM e_commerce_case_study.dates
 ORDER BY overall_quantity DESC;
 
--- Investigate high spend date
+-- Dates with Highest Revenue
 SELECT invoice_date,
 invoice_count,
 customer_count,

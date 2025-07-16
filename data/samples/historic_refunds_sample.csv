@@ -1,0 +1,4 @@
+invoice_no,invoice_date,invoice_time,customer_id,country,overall_quantity,overall_spend
+536379,2010-12-01,09:41:00,14527,"United Kingdom",-1,-27.50
+536383,2010-12-01,09:49:00,15311,"United Kingdom",-1,-4.65
+536391,2010-12-01,10:24:00,17548,"United Kingdom",-132,-141.48
