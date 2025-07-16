@@ -1,0 +1,4 @@
+country,region,sub_region,customer_types,earliest_purchase_date,last_purchase_date,country_tenure,frequency,monetary,recency,r_score,f_score,m_score,rfm_segment,rfm_class,estimated_lv
+Australia,Oceania,"Australia and New Zealand","Micro-Wholesaler, Retail, Wholesaler",2010-12-01,2011-11-24,358,69,137009.77,15,2,4,5,245,Other,34444
+Austria,Europe,"Western Europe","Micro-Wholesaler, Retail",2010-12-15,2011-12-08,358,19,10154.32,1,5,3,3,533,Other,2553
+Bahrain,Asia,"Western Asia",Retail,2011-05-09,2011-05-19,10,2,548.40,204,1,1,1,111,Churned,0

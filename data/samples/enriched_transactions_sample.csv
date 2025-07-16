@@ -1,0 +1,4 @@
+id,invoice_no,invoice_date,month_number,month_name,season,invoice_time,customer_id,customer_type,customer_class,country,region,sub_region,stock_code,product_level,description,quantity,unit_price,usual_price,total_spend,transaction_type,refund_status
+1,537626,2010-12-07,12,Dec,Winter,14:57:00,12347,Micro-Wholesaler,Loyal,Iceland,Europe,"Northern Europe",85116,Low,"black candelabra t-light holder",12,2.10,0.65,25.20,Purchase,"Not Refunded"
+2,537626,2010-12-07,12,Dec,Winter,14:57:00,12347,Micro-Wholesaler,Loyal,Iceland,Europe,"Northern Europe",22375,Standard,"airline bag vintage jet set brown",4,4.25,4.25,17.00,Purchase,"Not Refunded"
+3,537626,2010-12-07,12,Dec,Winter,14:57:00,12347,Micro-Wholesaler,Loyal,Iceland,Europe,"Northern Europe",71477,Standard,"colour glass. star t-light holder",12,3.25,3.25,39.00,Purchase,"Not Refunded"

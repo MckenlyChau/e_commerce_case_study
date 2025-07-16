@@ -1,0 +1,4 @@
+region,sub_regions,countries,customer_types,earliest_purchase_date,last_purchase_date,region_tenure,frequency,monetary,recency,r_score,f_score,m_score,rfm_segment,rfm_class,estimated_lv
+Africa,"Sub-Saharan Africa",RSA,Retail,2011-10-13,2011-10-13,0,1,1002.31,57,1,1,1,111,Churned,0
+Americas,"Latin America and the Caribbean, Northern America","Brazil, Canada, USA","Micro-Wholesaler, Retail",2011-03-14,2011-12-05,266,10,6540.90,4,3,2,2,322,"At Risk",4426
+Asia,"Eastern Asia, South-eastern Asia, Western Asia","Bahrain, Cyprus, Israel, Japan, Lebanon, Saudi Arabia, Singapore, United Arab Emirates","Micro-Wholesaler, Retail, Wholesaler",2010-12-05,2011-12-06,366,71,68811.34,3,4,4,3,443,Loyal,68623

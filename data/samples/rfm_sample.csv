@@ -1,4 +1,4 @@
-customer_id,customer_type,country,region,sub_region,earliest_purchase_date,last_purchase_date,frequency,monetary,recency,r_score,f_score,m_score,rfm_segment,rfm_class
-12347,Micro-Wholesaler,"Iceland",Europe,"Northern Europe",2010-12-07,2011-12-07,7,4310.00,2,5,4,5,545,Loyal
-12348,Micro-Wholesaler,"Finland",Europe,"Northern Europe",2010-12-16,2011-09-25,4,1797.24,75,2,4,4,244,Other
-12349,Retail,"Italy",Europe,"Southern Europe",2011-11-21,2011-11-21,1,1757.55,18,4,2,4,424,New
+customer_id,customer_type,countries,regions,sub_regions,earliest_purchase_date,last_purchase_date,customer_tenure,frequency,monetary,recency,r_score,f_score,m_score,rfm_segment,rfm_class,estimated_clv
+12347,Micro-Wholesaler,Iceland,Europe,"Northern Europe",2010-12-07,2011-12-07,365,7,4310.00,2,5,4,5,545,Loyal,4310
+12348,Micro-Wholesaler,Finland,Europe,"Northern Europe",2010-12-16,2011-09-25,283,4,1797.24,75,2,4,4,244,Other,572
+12349,Retail,Italy,Europe,"Southern Europe",2011-11-21,2011-11-21,0,1,1757.55,18,4,2,4,424,New,0

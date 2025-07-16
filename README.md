@@ -1546,6 +1546,13 @@ SET estimated_clv = ROUND(
 **Note** Recency is calculated using the most recent transaction date available in the dataset. An RFM (Recency, Frequency, Monetary) model was applied to enhance customer segmentation and analysis.
 Customers with a tenure of 0 (one-time purchasers) or those classified as Churned have their estimated customer lifetime value (CLV) set to 0, reflecting minimal or no future engagement.
 
+|customer_id|customer_type   |countries|regions|sub_regions    |earliest_purchase_date|last_purchase_date|customer_tenure|frequency|monetary|recency|r_score|f_score|m_score|rfm_segment|rfm_class|estimated_clv|
+|-----------|----------------|---------|-------|---------------|----------------------|------------------|---------------|---------|--------|-------|-------|-------|-------|-----------|---------|-------------|
+|12347      |Micro-Wholesaler|Iceland  |Europe |Northern Europe|2010-12-07            |2011-12-07        |365            |7        |4310.00 |2      |5      |4      |5      |545        |Loyal    |4310         |
+|12348      |Micro-Wholesaler|Finland  |Europe |Northern Europe|2010-12-16            |2011-09-25        |283            |4        |1797.24 |75     |2      |4      |4      |244        |Other    |572          |
+|12349      |Retail          |Italy    |Europe |Southern Europe|2011-11-21            |2011-11-21        |0              |1        |1757.55 |18     |4      |2      |4      |424        |New      |0            |
+
+
 #### 🗺️ Country Level RFM Model Table
 ```sql
 CREATE TABLE country_rfm AS
@@ -1628,6 +1635,12 @@ SET estimated_lv = ROUND(
 , 2);
 ```
 
+|country|region          |sub_region|customer_types|earliest_purchase_date|last_purchase_date|country_tenure|frequency|monetary|recency|r_score|f_score|m_score|rfm_segment|rfm_class|estimated_lv|
+|-------|----------------|----------|--------------|----------------------|------------------|--------------|---------|--------|-------|-------|-------|-------|-----------|---------|------------|
+|Australia|Oceania         |Australia and New Zealand|Micro-Wholesaler, Retail, Wholesaler|2010-12-01            |2011-11-24        |358           |69       |137009.77|15     |2      |4      |5      |245        |Other    |34444       |
+|Austria|Europe          |Western Europe|Micro-Wholesaler, Retail|2010-12-15            |2011-12-08        |358           |19       |10154.32|1      |5      |3      |3      |533        |Other    |2553        |
+|Bahrain|Asia            |Western Asia|Retail        |2011-05-09            |2011-05-19        |10            |2        |548.40  |204    |1      |1      |1      |111        |Churned  |0           |
+
 #### 🌍 Region Level RFM Model Table
 ```sql
 CREATE TABLE region_rfm AS
@@ -1707,6 +1720,13 @@ SET estimated_lv = ROUND(
   END
 , 2);
 ```
+
+|region|sub_regions     |countries|customer_types|earliest_purchase_date|last_purchase_date|region_tenure|frequency|monetary|recency|r_score|f_score|m_score|rfm_segment|rfm_class|estimated_lv|
+|------|----------------|---------|--------------|----------------------|------------------|-------------|---------|--------|-------|-------|-------|-------|-----------|---------|------------|
+|Africa|Sub-Saharan Africa|RSA      |Retail        |2011-10-13            |2011-10-13        |0            |1        |1002.31 |57     |1      |1      |1      |111        |Churned  |0           |
+|Americas|Latin America and the Caribbean, Northern America|Brazil, Canada, USA|Micro-Wholesaler, Retail|2011-03-14            |2011-12-05        |266          |10       |6540.90 |4      |3      |2      |2      |322        |At Risk  |4426        |
+|Asia  |Eastern Asia, South-eastern Asia, Western Asia|Bahrain, Cyprus, Israel, Japan, Lebanon, Saudi Arabia, Singapore, United Arab Emirates|Micro-Wholesaler, Retail, Wholesaler|2010-12-05            |2011-12-06        |366          |71       |68811.34|3      |4      |4      |3      |443        |Loyal    |68623       |
+
 
 #### 🌐 Sub-Region Level RFM Model Table
 ```sql
@@ -1788,6 +1808,12 @@ SET estimated_lv = ROUND(
 , 2);
 ```
 
+|sub_region|region          |countries|customer_types|earliest_purchase_date|last_purchase_date|sub_region_tenure|frequency|monetary|recency|r_score|f_score|m_score|rfm_segment|rfm_class|estimated_lv|
+|----------|----------------|---------|--------------|----------------------|------------------|-----------------|---------|--------|-------|-------|-------|-------|-----------|---------|------------|
+|Australia and New Zealand|Oceania         |Australia|Micro-Wholesaler, Retail, Wholesaler|2010-12-01            |2011-11-24        |358              |69       |137009.77|15     |2      |4      |4      |244        |Other    |34444       |
+|Eastern Asia|Asia            |Japan    |Micro-Wholesaler, Retail, Wholesaler|2010-12-05            |2011-12-06        |366              |28       |35340.62|3      |4      |2      |3      |423        |At Risk  |17381       |
+|Eastern Europe|Europe          |Czech Republic, Poland|Retail        |2010-12-03            |2011-11-18        |350              |29       |7920.86 |21     |2      |3      |2      |232        |Other    |2037        |
+
 #### ⌛ Daily FM Model Table
 ```sql
 CREATE TABLE daily_fm AS
@@ -1821,6 +1847,12 @@ SET m_class =
     WHEN m_score = 3 THEN 'Low'
   END;
 ```
+
+|invoice_date|frequency       |monetary|m_class|
+|------------|----------------|--------|-------|
+|2010-12-01  |126             |46008.74|High   |
+|2010-12-02  |154             |46340.65|High   |
+|2010-12-03  |62              |23748.13|Medium |
 
 #### 📆 Monthly FM Model Table
 ```sql
@@ -1856,6 +1888,12 @@ SET m_class =
   WHEN scored.m_score = 3 THEN 'Low'
   END;
 ```
+
+|month_number|month_name      |frequency|monetary|m_class|
+|------------|----------------|---------|--------|-------|
+|1           |Jan             |1222     |475817.66|Low    |
+|2           |Feb             |1191     |435272.07|Low    |
+|3           |Mar             |1614     |578806.94|Medium |
 
 #### ❄️ Seasonal FM Model Table
 ```sql
@@ -1907,6 +1945,12 @@ CREATE TABLE enriched_transactions AS
 ALTER TABLE enriched_transactions
 ADD COLUMN id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
 ```
+
+|id   |invoice_no      |invoice_date|month_number|month_name|season|invoice_time|customer_id|customer_type   |customer_class|country|region|sub_region     |stock_code|product_level|description                      |quantity|unit_price|usual_price|total_spend|transaction_type|refund_status|
+|-----|----------------|------------|------------|----------|------|------------|-----------|----------------|--------------|-------|------|---------------|----------|-------------|---------------------------------|--------|----------|-----------|-----------|----------------|-------------|
+|1    |537626          |2010-12-07  |12          |Dec       |Winter|14:57:00    |12347      |Micro-Wholesaler|Loyal         |Iceland|Europe|Northern Europe|85116     |Low          |black candelabra t-light holder  |12      |2.10      |0.65       |25.20      |Purchase        |Not Refunded |
+|2    |537626          |2010-12-07  |12          |Dec       |Winter|14:57:00    |12347      |Micro-Wholesaler|Loyal         |Iceland|Europe|Northern Europe|22375     |Standard     |airline bag vintage jet set brown|4       |4.25      |4.25       |17.00      |Purchase        |Not Refunded |
+|3    |537626          |2010-12-07  |12          |Dec       |Winter|14:57:00    |12347      |Micro-Wholesaler|Loyal         |Iceland|Europe|Northern Europe|71477     |Standard     |colour glass. star t-light holder|12      |3.25      |3.25       |39.00      |Purchase        |Not Refunded |
 
 #### 🛍️ Product Level RFM Table
 ```sql
@@ -2054,6 +2098,12 @@ SET estimated_value = ROUND(
   END
 , 2);
 ```
+
+|stock_code|description     |top_month|top_season|earliest_purchase_date|last_purchase_date|product_tenure|overall_quantity|average_price   |lowest_price|highest_price|usual_price|product_level  |frequency|monetary|recency                          |r_score|f_score|m_score|rfm_segment|rfm_class|estimated_value|
+|----------|----------------|---------|----------|----------------------|------------------|--------------|----------------|----------------|------------|-------------|-----------|---------------|---------|--------|---------------------------------|-------|-------|-------|-----------|---------|---------------|
+|10002     |inflatable political globe|Jan      |Winter    |2010-12-01            |2011-04-18        |138           |823             |0.85            |0.85        |0.85         |0.85       |Low            |49       |699.55  |235                              |5      |3      |3      |533        |Average  |304.15         |
+|10080     |groovy cactus inflatable|Nov      |Autumn    |2011-02-27            |2011-11-21        |267           |291             |0.41            |0.39        |0.85         |0.39       |Low            |21       |114.41  |18                               |4      |4      |4      |444        |Consistent Performer|156.40         |
+|10120     |doggy rubber    |Nov      |Autumn    |2010-12-03            |2011-12-04        |366           |192             |0.21            |0.21        |0.21         |0.21       |Low            |29       |40.32   |5                                |3      |4      |5      |345        |Average  |6.61           |
 
 ### 🧹 Clean Trailing Characters
 

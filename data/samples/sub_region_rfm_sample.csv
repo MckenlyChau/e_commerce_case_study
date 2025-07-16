@@ -1,0 +1,4 @@
+sub_region,region,countries,customer_types,earliest_purchase_date,last_purchase_date,sub_region_tenure,frequency,monetary,recency,r_score,f_score,m_score,rfm_segment,rfm_class,estimated_lv
+"Australia and New Zealand",Oceania,Australia,"Micro-Wholesaler, Retail, Wholesaler",2010-12-01,2011-11-24,358,69,137009.77,15,2,4,4,244,Other,34444
+"Eastern Asia",Asia,Japan,"Micro-Wholesaler, Retail, Wholesaler",2010-12-05,2011-12-06,366,28,35340.62,3,4,2,3,423,"At Risk",17381
+"Eastern Europe",Europe,"Czech Republic, Poland",Retail,2010-12-03,2011-11-18,350,29,7920.86,21,2,3,2,232,Other,2037
