@@ -1,8 +1,6 @@
 # 🛒 E-commerce Case Study
 
 ## Contents
-<details>
-<summary>Contents</summary>
 
 - [📌 Project Goal](#-project-goal)
 - [📊 Dataset](#-dataset)
@@ -18,7 +16,6 @@
 - [📈 Data Analysis](#-data-analysis)
 - [📈 Data Visuals](#-data-visuals)
 - [📄 License](#-license)
-</details>
 
 ## 📌 Project Goal  
 Analyze transaction data to extract insights into customer purchasing trends and behavior.
@@ -586,6 +583,8 @@ CREATE INDEX idx_invoice_date ON e_commerce_events(invoice_date);
 ---
 
 ## 🔄 Data Manipulation
+<details>
+<summary>Contents</summary>
 
 - [➕ Calculate and Add Total Spend](#-calculate-and-add-total-spend)
 - [🧾 Invoice Summary Table](#-invoice-summary-table)
@@ -598,6 +597,9 @@ CREATE INDEX idx_invoice_date ON e_commerce_events(invoice_date);
 - [🔑 Add Primary Keys to Summary Tables](#-add-primary-keys-to-summary-tables)
 
 ### ➕ Calculate and Add Total Spend
+<details>
+<summary>Code</summary>
+
 ```sql
 ALTER TABLE e_commerce_events ADD total_spend DECIMAL(10,2);
 UPDATE e_commerce_events
@@ -605,8 +607,12 @@ SET total_spend = unit_price * quantity;
 ALTER TABLE e_commerce_events 
 MODIFY COLUMN total_spend DECIMAL(10,2) AFTER unit_price;
 ```
+</details>
 
 ### 🧾 Invoice Summary Table
+<details>
+<summary>Code</summary>
+
 ```sql
 CREATE TABLE invoices AS
 SELECT
@@ -622,6 +628,8 @@ FROM e_commerce_events
 GROUP BY invoice_no, invoice_date, customer_id, country
 ORDER BY invoice_no;
 ```
+</details>
+
 |invoice_no|invoice_date|invoice_time                      |customer_id|country        |overall_quantity|overall_spend|transaction_types|
 |----------|------------|----------------------------------|-----------|---------------|----------------|-------------|-----------------|
 |536365    |2010-12-01  |08:26:00                          |17850      |United Kingdom |40              |139.12       |Purchase         |
@@ -629,6 +637,9 @@ ORDER BY invoice_no;
 |536367    |2010-12-01  |08:34:00                          |13047      |United Kingdom |83              |278.73       |Purchase         |
 
 ### 📆 Daily Performance Overview
+<details>
+<summary>Code</summary>
+
 ```sql
 CREATE TABLE dates AS
 SELECT
@@ -643,6 +654,8 @@ FROM e_commerce_events
 GROUP BY invoice_date
 ORDER BY invoice_date;
 ```
+</details>
+
 |invoice_date|invoice_count|customer_count|countries                      |overall_quantity|overall_spend|transaction_types                      |
 |------------|-------------|--------------|-------------------------------|----------------|-------------|---------------------------------------|
 |2010-12-01  |127          |98            |Australia , EIRE , France, Etc |23931           |45867.26     |Manual, Postage, Purchase, Refund      |
@@ -651,6 +664,9 @@ ORDER BY invoice_date;
 
 
 ###	👥 Customer Activity Summary
+<details>
+<summary>Code</summary>
+
 ```sql
 CREATE TABLE customers AS
 SELECT
@@ -667,6 +683,8 @@ FROM e_commerce_events
 GROUP BY customer_id
 ORDER BY customer_id;
 ```
+</details>
+
 |customer_id|earliest_transaction_date|latest_transaction_date|customer_tenure_days|invoice_count  |countries      |overall_quantity|overall_spend|transaction_types|
 |-----------|-------------------------|-----------------------|--------------------|---------------|---------------|----------------|-------------|-----------------|
 |12346      |2011-01-18               |2011-01-18             |0                   |2              |United Kingdom |0               |0.00         |Purchase, Refund |
@@ -676,6 +694,9 @@ ORDER BY customer_id;
 **Insight:** Several customers have an overall_spend of 0, which likely indicates full refunds or fully reversed transactions. Similarly, an overall_quantity of 0 may reflect historical refunds or data entry anomalies. Since these records do not provide meaningful analytical value, they may be excluded in later stages of the analysis.
 
 ### ✅ Active Customers Non-Zero Spend
+<details>
+<summary>Code</summary>
+
 ```sql
 CREATE TABLE valid_customers AS
 SELECT *
@@ -683,6 +704,8 @@ FROM customers
 WHERE overall_spend > 0
 AND overall_quantity > 0;
 ```
+</details>
+
 |customer_id|earliest_transaction_date|latest_transaction_date|customer_tenure_days|invoice_count  |countries|overall_quantity|overall_spend|transaction_types|
 |-----------|-------------------------|-----------------------|--------------------|---------------|---------|----------------|-------------|-----------------|
 |12347      |2010-12-07               |2011-12-07             |365                 |7              |Iceland  |2458            |4310.00      |Purchase         |
@@ -692,6 +715,9 @@ AND overall_quantity > 0;
 **Insight:** This cleaned subset of customers is well-suited for RFM (Recency, Frequency, Monetary) analysis, as it ensures all included records reflect meaningful purchasing behavior.
 
 ### 📦 Product Master Table
+<details>
+<summary>Code</summary>
+
 ```sql
 CREATE TABLE products AS
 WITH mode_cte AS (
@@ -733,6 +759,8 @@ JOIN mode_filtered mf ON e.stock_code = mf.stock_code
 GROUP BY td.stock_code, td.description, mf.usual_price
 ORDER BY td.stock_code;
 ```
+</details>
+
 |stock_code|description               |earliest_order_date|latest_order_date|overall_quantity|average_price|lowest_price|highest_price|usual_price|overall_spend|
 |----------|--------------------------|-------------------|-----------------|----------------|-------------|------------|-------------|-----------|-------------|
 |10002     |inflatable political globe|2010-12-01         |2011-04-18       |823             |0.85         |0.85        |0.85         |0.85       |699.55       |
@@ -742,6 +770,9 @@ ORDER BY td.stock_code;
 ***Insight:** Standardized product descriptions by assigning the most frequently used description per `stock_code`, ensuring consistency across records for accurate aggregation and analysis.
 
 ### 🌍 Country-Level Aggregates
+<details>
+<summary>Code</summary>
+
 ```sql
 CREATE TABLE countries AS
 SELECT
@@ -758,6 +789,8 @@ FROM e_commerce_events
 GROUP BY country
 ORDER BY country;
 ```
+</details>
+
 |country  |earliest_transaction_date|latest_transaction_date|invoice_count|customer_count |overall_quantity|overall_spend|avg_spend_per_customer|transaction_types|
 |---------|-------------------------|-----------------------|-------------|---------------|----------------|-------------|----------------------|-----------------|
 |Australia|2010-12-01               |2011-11-24             |69           |9              |83335           |137009.77    |15223.31              |Postage & Etc    |
@@ -766,6 +799,9 @@ ORDER BY country;
 
 
 ### 🔄 Transaction Type Breakdown
+<details>
+<summary>Code</summary>
+
 ```sql
 CREATE TABLE transaction_types AS
 SELECT
@@ -778,6 +814,8 @@ FROM e_commerce_events
 GROUP BY transaction_type
 ORDER BY transaction_type;
 ```
+</details>
+
 |transaction_type|invoice_count|customer_count                    |overall_quantity|overall_spend  |
 |----------------|-------------|----------------------------------|----------------|---------------|
 |Bank Charges    |11           |10                                |11              |165.00         |
@@ -785,6 +823,9 @@ ORDER BY transaction_type;
 |Manual          |253          |197                               |6933            |53419.93       |
 
 ### 🔑 Add Primary Keys to Summary Tables
+<details>
+<summary>Code</summary>
+
 ```sql
 ALTER TABLE invoices ADD PRIMARY KEY (invoice_no);
 ALTER TABLE dates ADD PRIMARY KEY (invoice_date);
@@ -793,10 +834,13 @@ ALTER TABLE countries ADD PRIMARY KEY (country);
 ALTER TABLE products ADD PRIMARY KEY (stock_code);
 ALTER TABLE transaction_types ADD PRIMARY KEY (transaction_type);
 ```
-
+</details>
+</details>
 ---
 
 ## 📊 Data Exploration
+<details>
+<summary>Contents</summary>
 
 - [👥 EX-Customers](#-ex-customers)
 - [📦 EX-Products](#-ex-products)
@@ -806,11 +850,16 @@ ALTER TABLE transaction_types ADD PRIMARY KEY (transaction_type);
 
 
 ### 👥 EX-Customers
+<details>
+<summary>Contents</summary>
 
 - [💰 Top Customer Spenders](#-top-customer-spenders)
 - [🔍 Sample Top Customers](#-sample-top-customers)
 
 #### 💰 Top Customer Spenders
+<details>
+<summary>Code</summary>
+
 ```sql
 SELECT customer_id,
 	customer_tenure_days,
@@ -822,6 +871,8 @@ FROM e_commerce_case_study.valid_customers
 ORDER BY overall_spend DESC
 LIMIT 5;
 ```
+</details>
+
 |customer_id|customer_tenure_days|invoice_count|countries      |overall_quantity|overall_spend|
 |-----------|--------------------|-------------|---------------|----------------|-------------|
 |14646      |353                 |76           |Netherlands    |196143          |279489.02    |
@@ -833,19 +884,31 @@ LIMIT 5;
 **Insight:** Several customers consistently exhibit high order volumes and total spending, indicating potential wholesale buyers or bulk purchasers.
 
 ### 🔍 Sample Top Customers
+<details>
+<summary>Code</summary>
+
 ```sql
 SELECT * FROM e_commerce_events WHERE customer_id = 14646;
 SELECT * FROM e_commerce_events WHERE customer_id = 18102;
 SELECT * FROM e_commerce_events WHERE customer_id = 17450;
 ```
+</details>
+
 **Insight:** Many of their transactions involve purchasing 100+ units of individual items, reinforcing the likelihood that they are wholesale customers. Further analysis is needed to distinguish wholesalers from regular retail buyers.
+</details>
 
 ### 📦 EX-Products
+<details>
+<summary>Code</summary>
+
 
 - [🏆 Top Products by Revenue](#-top-products-by-revenue)
 - [📦 Top Products by Volume](#-top-products-by-volume)
 
 #### 🏆 Top Products by Revenue
+<details>
+<summary>Code</summary>
+
 ```sql
 SELECT stock_code,
 	description,
@@ -858,6 +921,8 @@ SELECT stock_code,
 FROM products
 ORDER BY overall_spend DESC;
 ```
+</details>
+
 |stock_code|description                       |overall_quantity|average_price|lowest_price|highest_price|usual_price|overall_spend|
 |----------|----------------------------------|----------------|-------------|------------|-------------|-----------|-------------|
 |22423     |regency cakestand 3 tier          |11519           |12.44        |4.00        |24.96        |12.75      |132567.70    |
@@ -867,6 +932,9 @@ ORDER BY overall_spend DESC;
 **Insight:** The Regency Cakestand ranks among the top items by `overall_spend`, despite having a lower quantity sold compared to others. This suggests it is a high-value item. Categorizing products into high-end and low-end segments based on `usual_price` may provide more meaningful insights during analysis.
 
 #### 📦 Top Products by Volume
+<details>
+<summary>Code</summary>
+
 ```sql
 SELECT stock_code,
 	description,
@@ -879,6 +947,8 @@ SELECT stock_code,
 FROM products
 ORDER BY overall_quantity DESC;
 ```
+</details>
+
 |stock_code|description                      |overall_quantity|average_price|lowest_price|highest_price|usual_price|overall_spend|
 |----------|---------------------------------|----------------|-------------|------------|-------------|-----------|-------------|
 |84077     |world war 2 gliders asstd designs|53119           |0.29         |0.11        |0.63         |0.29       |13304.49     |
@@ -888,19 +958,26 @@ ORDER BY overall_quantity DESC;
 **Insight:** Most high-volume products are priced below $1, with only a few exceptions. This reinforces the value of segmenting items into low-end and high-end categories based on `usual_price` for more precise product-level analysis.
 
 **Note** Product categorization was explored but deprioritized due to high variability in descriptions and limited benefit to core business insights.
-
+</details>
 
 ### 🧾 EX-Invoices
+<details>
+<summary>Contents</summary>
 
 - [📊 Largest Orders by Quantity](#-largest-orders-by-quantitys)
 - [↩️ Largest Refunds by Quantity](#️-largest-refunds-by-quantity)
 
 #### 📊 Largest Orders by Quantitys
+<details>
+<summary>Code</summary>
+
 ```sql
 SELECT * 
 FROM invoices
 ORDER BY overall_quantity DESC;
 ```
+</details>
+
 |invoice_no|invoice_date              |invoice_time|customer_id|country        |overall_quantity|overall_spend|transaction_types|
 |----------|--------------------------|------------|-----------|---------------|----------------|-------------|-----------------|
 |581483    |2011-12-09                |09:15:00    |16446      |United Kingdom |80995           |168469.60    |Purchase         |
@@ -908,11 +985,16 @@ ORDER BY overall_quantity DESC;
 |556917    |2011-06-15                |13:37:00    |12415      |Australia      |15049           |22775.93     |Purchase         |
 
 #### ↩️ Largest Refunds by Quantity
+<details>
+<summary>Code</summary>
+
 ```sql
 SELECT * 
 FROM invoices
 ORDER BY overall_quantity;
 ```
+</details>
+
 |invoice_no|invoice_date              |invoice_time|customer_id|country        |overall_quantity|overall_spend|transaction_types|
 |----------|--------------------------|------------|-----------|---------------|----------------|-------------|-----------------|
 |581484    |2011-12-09                |09:27:00    |16446      |United Kingdom |-80995          |-168469.60   |Refund           |
@@ -920,8 +1002,11 @@ ORDER BY overall_quantity;
 |536757    |2010-12-02                |14:23:00    |15838      |United Kingdom |-9360           |-280.80      |Refund           |
 
 **Insight:** This is the inverse of large orders by sorting in ascending quantity. Numerous large invoices appear to be refunded shortly after the original purchase. It would be beneficial to identify and label fully refunded orders to improve accuracy in customer and revenue analysis.
+</details>
 
 ### 🌍 EX-Country
+<details>
+<summary>Contents</summary>
 
 - [🌍 Top Countries by Invoices](#-top-countries-by-invoices)
 - [👥 Top Countries by Customers](#-top-countries-by-customers)
@@ -930,6 +1015,9 @@ ORDER BY overall_quantity;
 - [🧾 Top Countries by Avg. Spend per Customer](#-top-countries-by-avg-spend-per-customer)
 
 #### 🌍 Top Countries by Invoices
+<details>
+<summary>Code</summary>
+
 ```sql
 SELECT country,
 	invoice_count,
@@ -940,6 +1028,8 @@ SELECT country,
 FROM countries
 ORDER BY invoice_count DESC;
 ```
+</details>
+
 |country        |invoice_count             |customer_count|overall_quantity|overall_spend|avg_spend_per_customer|
 |---------------|--------------------------|--------------|----------------|-------------|----------------------|
 |United Kingdom |19854                     |3949          |3982134         |6747156.15   |1708.57               |
@@ -947,6 +1037,9 @@ ORDER BY invoice_count DESC;
 |France         |458                       |87            |109805          |196626.05    |2260.07               |
 
 #### 👥 Top Countries by Customers
+<details>
+<summary>Code</summary>
+
 ```sql
 SELECT country,
 	invoice_count,
@@ -957,6 +1050,8 @@ SELECT country,
 FROM countries
 ORDER BY customer_count DESC;
 ```
+</details>
+
 |country        |invoice_count             |customer_count|overall_quantity|overall_spend|avg_spend_per_customer|
 |---------------|--------------------------|--------------|----------------|-------------|----------------------|
 |United Kingdom |19854                     |3949          |3982134         |6747156.15   |1708.57               |
@@ -964,6 +1059,9 @@ ORDER BY customer_count DESC;
 |France         |458                       |87            |109805          |196626.05    |2260.07               |
 
 #### 📦 Top Countries by Units Sold
+<details>
+<summary>Code</summary>
+
 ```sql
 SELECT country,
 	invoice_count,
@@ -974,6 +1072,8 @@ SELECT country,
 FROM countries
 ORDER BY overall_quantity DESC;
 ```
+</details>
+
 |country        |invoice_count             |customer_count|overall_quantity|overall_spend|avg_spend_per_customer|
 |---------------|--------------------------|--------------|----------------|-------------|----------------------|
 |United Kingdom |19854                     |3949          |3982134         |6747156.15   |1708.57               |
@@ -981,6 +1081,9 @@ ORDER BY overall_quantity DESC;
 |EIRE           |319                       |3             |135937          |250001.78    |83333.93              |
 
 #### 💸 Top Countries by Total Spend
+<details>
+<summary>Code</summary>
+
 ```sql
 SELECT country,
 	invoice_count,
@@ -991,6 +1094,8 @@ SELECT country,
 FROM countries
 ORDER BY overall_spend DESC;
 ```
+</details>
+
 |country        |invoice_count             |customer_count|overall_quantity|overall_spend|avg_spend_per_customer|
 |---------------|--------------------------|--------------|----------------|-------------|----------------------|
 |United Kingdom |19854                     |3949          |3982134         |6747156.15   |1708.57               |
@@ -998,6 +1103,9 @@ ORDER BY overall_spend DESC;
 |EIRE           |319                       |3             |135937          |250001.78    |83333.93              |
 
 #### 🧾 Top Countries by Avg. Spend per Customer
+<details>
+<summary>Code</summary>
+
 ```sql
 SELECT country,
 	invoice_count,
@@ -1008,6 +1116,8 @@ SELECT country,
 FROM countries
 ORDER BY avg_spend_per_customer DESC;
 ```
+</details>
+
 |country     |invoice_count             |customer_count|overall_quantity|overall_spend|avg_spend_per_customer|
 |------------|--------------------------|--------------|----------------|-------------|----------------------|
 |EIRE        |319                       |3             |135937          |250001.78    |83333.93              |
@@ -1015,8 +1125,11 @@ ORDER BY avg_spend_per_customer DESC;
 |Australia   |69                        |9             |83335           |137009.77    |15223.31              |
 
 **Insight:** Orders from the United Kingdom significantly surpass other countries in both quantity and total spend, which aligns with the dataset’s UK origin. Countries with fewer customers often exhibit a higher average spend per customer, suggesting that international sales may have been limited to wholesale buyers operating in their own domestic markets. It may be valuable to distinguish between domestic and international transactions for clearer segmentation.
+</details>
 
 ### 📅 EX-Dates
+<details>
+<summary>Contents</summary>
 
 - [🗓️ Dates with Most Invoices](#️-dates-with-most-invoices)
 - [👤 Dates with Most Customers](#-dates-with-most-customers)
@@ -1024,6 +1137,9 @@ ORDER BY avg_spend_per_customer DESC;
 - [💳 Dates with Highest Revenue](#-dates-with-highest-revenue)
 
 #### 🗓️ Dates with Most Invoices
+<details>
+<summary>Code</summary>
+
 ```sql
 SELECT invoice_date,
 invoice_count,
@@ -1033,6 +1149,8 @@ overall_spend
 FROM e_commerce_case_study.dates
 ORDER BY invoice_count DESC;
 ```
+</details>
+
 |invoice_date|invoice_count             |customer_count|overall_quantity|overall_spend|
 |------------|--------------------------|--------------|----------------|-------------|
 |2011-10-06  |180                       |154           |30848           |52673.62     |
@@ -1040,6 +1158,9 @@ ORDER BY invoice_count DESC;
 |2011-11-10  |161                       |139           |37780           |68321.01     |
 
 #### 👤 Dates with Most Customers
+<details>
+<summary>Code</summary>
+
 ```sql
 SELECT invoice_date,
 invoice_count,
@@ -1049,6 +1170,8 @@ overall_spend
 FROM e_commerce_case_study.dates
 ORDER BY customer_count DESC;
 ```
+</details>
+
 |invoice_date|invoice_count             |customer_count|overall_quantity|overall_spend|
 |------------|--------------------------|--------------|----------------|-------------|
 |2011-10-06  |180                       |154           |30848           |52673.62     |
@@ -1056,6 +1179,9 @@ ORDER BY customer_count DESC;
 |2011-11-10  |161                       |139           |37780           |68321.01     |
 
 #### 📈 Dates with Highest Sales Volume
+<details>
+<summary>Code</summary>
+
 ```sql
 SELECT invoice_date,
 invoice_count,
@@ -1065,6 +1191,8 @@ overall_spend
 FROM e_commerce_case_study.dates
 ORDER BY overall_quantity DESC;
 ```
+</details>
+
 |invoice_date|invoice_count             |customer_count|overall_quantity|overall_spend|
 |------------|--------------------------|--------------|----------------|-------------|
 |2011-10-05  |99                        |82            |45677           |73626.37     |
@@ -1072,6 +1200,9 @@ ORDER BY overall_quantity DESC;
 |2011-12-07  |117                       |101           |40903           |68867.66     |
 
 #### 💳 Dates with Highest Revenue
+<details>
+<summary>Code</summary>
+
 ```sql
 SELECT invoice_date,
 invoice_count,
@@ -1081,6 +1212,8 @@ overall_spend
 FROM e_commerce_case_study.dates
 ORDER BY overall_spend DESC;
 ```
+</details>
+
 |invoice_date|invoice_count             |customer_count|overall_quantity|overall_spend|
 |------------|--------------------------|--------------|----------------|-------------|
 |2011-09-20  |71                        |56            |42583           |103327.13    |
@@ -1088,10 +1221,13 @@ ORDER BY overall_spend DESC;
 |2011-11-23  |148                       |114           |38035           |70099.27     |
 
 **Insight:** The highest overall quantity and total spend are concentrated in the latter half of the year, indicating a potential seasonal trend. This pattern suggests increased purchasing activity during certain months, likely related to holidays or year-end demand. Further analysis by month and season will help validate and understand these trends.
-
+</details>
+</details>
 ---
 
 ## 🧠 Data Enrichment
+<details>
+<summary>Contents</summary>
 
 - [👥 EN-Customers](#-en-customers)
 - [📦 EN-Product](#-en-product)
@@ -1102,12 +1238,17 @@ ORDER BY overall_spend DESC;
 - [🧹 Clean Trailing Characters](#-clean-trailing-characters)
 
 ### 👥 EN-Customers
+<details>
+<summary>Contents</summary>
 
 - [🧠 Customer Segmentation by Type](#-customer-segmentation-by-type)
 - [📈 Customer Segmentation by Engagement](#-customer-segmentation-by-engagement)
 - [🧮 Add CLV Columns](#-add-clv-columns)
 
 #### 🧠 Customer Segmentation by Type
+<details>
+<summary>Code</summary>
+
 ```sql
 ALTER TABLE valid_customers
 ADD COLUMN customer_type VARCHAR(20);
@@ -1124,9 +1265,14 @@ SET customer_type =
     ELSE 'Retail'
   END;
 ```
+</details>
+
 **Insight:** Customers with an overall quantity exceeding 5,000, an average of more than 100 items per invoice, and total spending above 10,000 strongly indicate wholesale purchasing behavior. Meanwhile, those with over 2,000 items, an average above 50 per invoice, and spending above 1,000 suggest micro-wholesale activity. These thresholds help distinguish wholesalers from regular retail customers by identifying consistent patterns in purchase volume and value.
 
 #### 📈 Customer Segmentation by Engagement
+<details>
+<summary>Code</summary>
+
 ```sql
 ALTER TABLE valid_customers
 ADD COLUMN customer_level VARCHAR(20);
@@ -1141,9 +1287,14 @@ SET customer_level =
   ELSE 'Occasional'
 END;
 ```
+</details>
+
 **Insight:** Customers are categorized into engagement levels based on the number of days between their first and last transactions `customer_tenure_days` and their total number of invoices `invoice_count`. This segmentation helps classify them as One-Time, Short-Term, Medium-Term, Recurrent, or Occasional customers, providing a clearer understanding of purchasing behavior and loyalty.
 
 #### 🧮 Add CLV Columns
+<details>
+<summary>Code</summary>
+
 ```sql
 ALTER TABLE valid_customers
 ADD COLUMN customer_lifetime_value DECIMAL(10, 2),
@@ -1169,13 +1320,21 @@ SET estimated_clv =
     ELSE 180  -- Default fallback
   END; 
 ```
+</details>
+
 **Insight:** Customer Lifetime Value (CLV) was calculated by segmenting customers based on their engagement level and purchasing behavior. This approach provides a more tailored estimate of long-term value across Retail, Micro-Wholesaler, and Wholesaler segments.
+</details>
 
 ### 📦 EN-Product
+<details>
+<summary>Contents</summary>
 
 - [💰 Product Tier Assignment by Price](#-product-tier-assignment-by-price)
 
 #### 💰 Product Tier Assignment by Price
+<details>
+<summary>Code</summary>
+
 ```sql
 ALTER TABLE products
 ADD COLUMN product_level VARCHAR(20);
@@ -1190,11 +1349,16 @@ SET product_level =
     ELSE 'Low'
   END;
 ```
+</details>
+
 **Insight:** Products are categorized into tiers—Premium, High, Mid, Standard, and Low—based on their `usual_price` to reflect relative pricing levels and support more granular product analysis.
 
 **Note** Product return rate was evaluated as a potential metric but ultimately excluded due to the absence of return reason data. Without understanding the context behind refunds (e.g., overordering, defects, or logistical issues), any conclusions drawn would be speculative. Product return rate was considered, but dropped due to not having information as to the cause of return which would have resulted in too much conjecture.
+</details>
 
 ### 🗓️ EN-Dates
+<details>
+<summary>Contents</summary>
 
 - [📅 Add Month and Month Number](#-add-month-and-month-number)
 - [📊 Monthly Trends Summary Table](#-monthly-trends-summary-table)
@@ -1202,6 +1366,9 @@ SET product_level =
 - [🗂️ Seasonal Summary Table](#️-seasonal-summary-table)
 
 #### 📅 Add Month and Month Number
+<details>
+<summary>Code</summary>
+
 ```sql
 ALTER TABLE dates
 ADD COLUMN month_number TINYINT,
@@ -1216,9 +1383,14 @@ SET
 MODIFY COLUMN month_number TINYINT AFTER invoice_date,
 MODIFY COLUMN month_name VARCHAR(10) AFTER month_number;
 ```
+</details>
+
 **Insight:** Added month_number and month_name columns to enhance time-based analysis and enable proper chronological sorting in monthly reports.
 
 #### 📊 Monthly Trends Summary Table
+<details>
+<summary>Code</summary>
+
 ```sql
 CREATE TABLE months AS
 SELECT 
@@ -1233,6 +1405,8 @@ GROUP BY month_number, month_name
 ORDER BY month_number;
 ALTER TABLE months ADD PRIMARY KEY (month_number);
 ```
+</details>
+
 |month_number|month_name                |invoice_count|customer_count|overall_quantity|overall_spend|
 |------------|--------------------------|-------------|--------------|----------------|-------------|
 |1           |Jan                       |1236         |1116          |268706          |473731.90    |
@@ -1240,6 +1414,9 @@ ALTER TABLE months ADD PRIMARY KEY (month_number);
 |3           |Mar                       |1619         |1434          |343054          |578576.21    |
 
 #### 🌦️ Seasonal Data Columns
+<details>
+<summary>Code</summary>
+
 ```sql
 ALTER TABLE dates
 ADD COLUMN season VARCHAR(10);
@@ -1265,9 +1442,14 @@ SET season = CASE
 ALTER TABLE months
 MODIFY COLUMN season VARCHAR(10) AFTER month_name;
 ```
+</details>
+
 **Note** Seasonal classification is based on the United Kingdom's meteorological seasons, as the dataset originates from the UK.
 
 #### 🗂️ Seasonal Summary Table
+<details>
+<summary>Code</summary>
+
 ```sql
 CREATE TABLE seasons AS
 SELECT 
@@ -1293,25 +1475,34 @@ ORDER BY
   END;
 ALTER TABLE seasons ADD PRIMARY KEY (season);
 ```
+</details>
+
 |season|season_range|invoice_count|customer_count           |overall_quantity|overall_spend|
 |------|------------|-------------|-------------------------|----------------|-------------|
 |Autumn|Sep - Nov   |7425         |6416                     |1759212         |3029477.68   |
 |Spring|Mar - May   |4852         |4210                     |987811          |1650810.55   |
 |Summer|Jun - Aug   |4843         |4262                     |1102633         |1795052.93   |
 |Winter|Dec - Feb   |5066         |4406                     |1029307         |1803178.26   |
-
+</details>
 
 ### 🧾 EN-Invoices
+<details>
+<summary>Contents</summary>
 
 - [💸 Refund Summary Table](#-refund-summary-table)
 - [📜 Historic Refunds Table](#-historic-refunds-table)
 - [📑 Enriched Invoice Summary](#-enriched-invoice-summary)
 
 #### 💸 Refund Summary Table
+<details>
+<summary>Code</summary>
+
 ```sql
 -- Keep best-matched refund per purchase
 ALTER TABLE refunds ADD PRIMARY KEY (purchase_invoice);
 ```
+</details>
+
 |purchase_invoice|refund_invoice|customer_id|country        |purchase_date|refund_date|days_between|purchase_quantity|refund_quantity|purchase_spend|refund_spend|refund_type|
 |----------------|--------------|-----------|---------------|-------------|-----------|------------|-----------------|---------------|--------------|------------|-----------|
 |537217          |537406        |15502      |United Kingdom |2010-12-05   |2010-12-06 |1           |16               |16             |167.20        |167.20      |Full       |
@@ -1321,6 +1512,9 @@ ALTER TABLE refunds ADD PRIMARY KEY (purchase_invoice);
 **Insight:** A dedicated refunds table was created by matching refund invoices to their corresponding purchases within a 14-day window. The matching logic allows a 15% tolerance in quantity and spend for most transactions, while applying a more lenient 50% tolerance for purchases under $50 to accommodate smaller discrepancies. A `refund_type` column was added to classify refunds as either Full or Partial, based on the proportion of value refunded relative to the original purchase.
 
 #### 📜 Historic Refunds Table
+<details>
+<summary>Code</summary>
+
 ```sql
 CREATE TABLE historic_refunds AS
 SELECT 
@@ -1338,6 +1532,8 @@ WHERE r.refund_invoice IS NULL
   AND i.transaction_types LIKE '%Refund%';
 ALTER TABLE historic_refunds ADD PRIMARY KEY (invoice_no);
 ```
+</details>
+
 |invoice_no|invoice_date|invoice_time|customer_id    |country        |overall_quantity|overall_spend|
 |----------|------------|------------|---------------|---------------|----------------|-------------|
 |536379    |2010-12-01  |09:41:00    |14527          |United Kingdom |-1              |-27.50       |
@@ -1347,6 +1543,9 @@ ALTER TABLE historic_refunds ADD PRIMARY KEY (invoice_no);
 **Insight:** These refunds lack a corresponding purchase record within the dataset, suggesting they likely relate to transactions that occurred prior to the available data range.
 
 #### 📑 Enriched Invoice Summary
+<details>
+<summary>Code</summary>
+
 ```sql
 CREATE TABLE enriched_invoices AS
 SELECT 
@@ -1375,6 +1574,8 @@ LEFT JOIN valid_customers v ON i.customer_id = v.customer_id
 ORDER BY i.invoice_no;
 ALTER TABLE enriched_invoices ADD PRIMARY KEY (invoice_no);
 ```
+</details>
+
 |invoice_no|invoice_date|invoice_time|customer_id    |customer_type|country        |overall_quantity|overall_spend|transaction_types|refund_status|
 |----------|------------|------------|---------------|-------------|---------------|----------------|-------------|-----------------|-------------|
 |536365    |2010-12-01  |08:26:00    |17850          |Retail       |United Kingdom |40              |139.12       |Purchase         |Not Refunded |
@@ -1382,8 +1583,11 @@ ALTER TABLE enriched_invoices ADD PRIMARY KEY (invoice_no);
 |536367    |2010-12-01  |08:34:00    |13047          |Retail       |United Kingdom |83              |278.73       |Purchase         |Not Refunded |
 
 **Insight:** This table enhances the original invoice data by incorporating customer classifications from the `valid_customers` table and leveraging both the `refunds` and `historic_refunds` tables to assign a clear refund status—identifying whether a purchase was fully refunded, partially refunded, or represents a historic refund.
+</details>
 
 ### 🌍 EN-Country
+<details>
+<summary>Contents</summary>
 
 - [🗺️ Import Region Data](#️-import-region-data)
 - [🏳️ Enriched Countries Table](#️-enriched-countries-table)
@@ -1393,6 +1597,8 @@ ALTER TABLE enriched_invoices ADD PRIMARY KEY (invoice_no);
 - [🧩 Enrich Invoices Table with Region Data](#-enrich-invoices-table-with-region-data)
 
 #### 🗺️ Import Region Data
+<details>
+<summary>Contents</summary>
 
 - [🔽 Download Dataset](#-download-dataset)
 - [🛠️ Preprocess Dataset in Excel](#️-preprocess-dataset-in-excel)
@@ -1405,6 +1611,8 @@ C:\ProgramData\MySQL\MySQL Server 8.0\Uploads\unsd.csv
 
 ##### 🛠️ Preprocess Dataset in Excel
 Before importing, apply the following changes:
+<details>
+<summary>Contents</summary>
 
 - [🧭 Standardize Country Names](#-standardize-country-names)
 - [🧹 Column Cleanup](#-column-cleanup)
@@ -1440,8 +1648,12 @@ Update localized names for compatibility with your primary dataset:
 
 - Save as: unsd.csv
 - Format: UTF-8 encoded CSV
+</details>
 
 ##### 🗂️ UNSD Classification Table
+<details>
+<summary>Code</summary>
+
 ```sql
 CREATE TABLE unsd_classifications (
     region_code INT,
@@ -1459,13 +1671,19 @@ IGNORE 1 ROWS(
   region_code, region_name, sub_region_code, sub_region_name, country
 );
 ```
+</details>
+
 |region_code|region_name|sub_region_code|sub_region_name          |country   |
 |-----------|-----------|---------------|-------------------------|----------|
 |9          |Oceania    |53             |Australia and New Zealand|Australia |
 |150        |Europe     |155            |Western Europe           |Austria   |
 |142        |Asia       |145            |Western Asia             |Bahrain   |
+</details>
 
 #### 🏳️ Enriched Countries Table
+<details>
+<summary>Code</summary>
+
 ```sql
 CREATE TABLE enriched_countries AS
 	SELECT
@@ -1485,6 +1703,8 @@ CREATE TABLE enriched_countries AS
     ON c.country = u.country;
 ALTER TABLE enriched_countries ADD PRIMARY KEY (country_name);
 ```
+</details>
+
 |country_name|region_name|sub_region_name|earliest_transaction_date|latest_transaction_date|invoice_count|customer_count|overall_quantity|overall_spend|avg_spend_per_customer|transaction_types        |
 |------------|-----------|---------------|-------------------------|-----------------------|-------------|--------------|----------------|-------------|----------------------|-------------------------|
 |Australia   |Oceania    |Australia and New Zealand|2010-12-01               |2011-11-24             |69           |9             |83335           |137009.77    |15223.31              |Postage, Purchase, Refund|
@@ -1492,6 +1712,9 @@ ALTER TABLE enriched_countries ADD PRIMARY KEY (country_name);
 |Bahrain     |Asia       |Western Asia   |2011-05-09               |2011-05-19             |2            |2             |260             |548.40       |274.20                |Purchase                 |
 
 #### 🏞️ Region Summary Table
+<details>
+<summary>Code</summary>
+
 ```sql
 CREATE TABLE regions AS 
 SELECT 
@@ -1510,6 +1733,8 @@ FROM enriched_countries
 GROUP BY enriched_countries.region_name;
 ALTER TABLE regions ADD PRIMARY KEY (region_name);
 ```
+</details>
+
 |region_name|countries             |earliest_transaction_date|latest_transaction_date  |invoice_count|customer_count|overall_quantity|avg_spend_per_customer|
 |-----------|----------------------|-------------------------|-------------------------|-------------|--------------|----------------|----------------------|
 |Africa     |RSA                   |2011-10-13               |2011-10-13               |1            |1             |351             |1002.31               |
@@ -1517,6 +1742,9 @@ ALTER TABLE regions ADD PRIMARY KEY (region_name);
 |Asia       |Bahrain , Cyprus , ETC|2010-12-05               |2011-12-06               |72           |27            |42438           |2540.14               |
 
 #### 🧭 Sub-Region Summary Table
+<details>
+<summary>Code</summary>
+
 ```sql
 CREATE TABLE sub_regions AS 
 SELECT 
@@ -1535,6 +1763,8 @@ FROM enriched_countries
 GROUP BY enriched_countries.sub_region_name;
 ALTER TABLE sub_regions ADD PRIMARY KEY (sub_region_name);
 ```
+</details>
+
 |sub_region_name          |countries|earliest_transaction_date|latest_transaction_date  |invoice_count|customer_count|overall_quantity|avg_spend_per_customer|
 |-------------------------|---------|-------------------------|-------------------------|-------------|--------------|----------------|----------------------|
 |Australia and New Zealand|Australia|2010-12-01               |2011-11-24               |69           |9             |83335           |15223.31              |
@@ -1542,6 +1772,9 @@ ALTER TABLE sub_regions ADD PRIMARY KEY (sub_region_name);
 |Eastern Europe           |Czech Republic , Poland |2010-12-03               |2011-11-18               |29           |7             |4245            |1131.55               |
 
 #### 📌 Enrich Valid Customers with Region Data
+<details>
+<summary>Code</summary>
+
 ```sql
 ALTER TABLE valid_customers
 ADD COLUMN regions VARCHAR(100),
@@ -1593,11 +1826,12 @@ UPDATE enriched_invoices
   sub_region = CASE WHEN sub_region IS NOT NULL THEN sub_region
   ELSE 'Unspecified' END;
 ```
+</details>
 
 **Note** Climate data was reviewed during the enrichment process but ultimately excluded from implementation due to the extensive effort required to apply it meaningfully within the project's scope.
+</details>
 
 ### 📦 Finalized Tables
-
 <details>
 <summary>Contents</summary>
 
@@ -1612,6 +1846,9 @@ UPDATE enriched_invoices
 - [🛍️ Product Level RFM Table](#️-product-level-rfm-table)
 
 #### 📊 RFM Model Table
+<details>
+<summary>Code</summary>
+
 ```sql
 -- RFM Model Table
 CREATE TABLE rfm AS
@@ -1693,6 +1930,7 @@ SET estimated_clv = ROUND(
   END
 , 2);
 ```
+</details>
 
 **Note** Recency is calculated using the most recent transaction date available in the dataset. An RFM (Recency, Frequency, Monetary) model was applied to enhance customer segmentation and analysis.
 Customers with a tenure of 0 (one-time purchasers) or those classified as Churned have their estimated customer lifetime value (CLV) set to 0, reflecting minimal or no future engagement.
@@ -1705,6 +1943,9 @@ Customers with a tenure of 0 (one-time purchasers) or those classified as Churne
 
 
 #### 🗺️ Country Level RFM Model Table
+<details>
+<summary>Code</summary>
+
 ```sql
 CREATE TABLE country_rfm AS
 SELECT 
@@ -1785,6 +2026,7 @@ SET estimated_lv = ROUND(
   END
 , 2);
 ```
+</details>
 
 |country|region          |sub_region|customer_types|earliest_purchase_date|last_purchase_date|country_tenure|frequency|monetary|recency|r_score|f_score|m_score|rfm_segment|rfm_class|estimated_lv|
 |-------|----------------|----------|--------------|----------------------|------------------|--------------|---------|--------|-------|-------|-------|-------|-----------|---------|------------|
@@ -1793,6 +2035,9 @@ SET estimated_lv = ROUND(
 |Bahrain|Asia            |Western Asia|Retail        |2011-05-09            |2011-05-19        |10            |2        |548.40  |204    |1      |1      |1      |111        |Churned  |0           |
 
 #### 🌍 Region Level RFM Model Table
+<details>
+<summary>Code</summary>
+
 ```sql
 CREATE TABLE region_rfm AS
 SELECT 
@@ -1871,6 +2116,7 @@ SET estimated_lv = ROUND(
   END
 , 2);
 ```
+</details>
 
 |region|sub_regions     |countries|customer_types|earliest_purchase_date|last_purchase_date|region_tenure|frequency|monetary|recency|r_score|f_score|m_score|rfm_segment|rfm_class|estimated_lv|
 |------|----------------|---------|--------------|----------------------|------------------|-------------|---------|--------|-------|-------|-------|-------|-----------|---------|------------|
@@ -1880,6 +2126,9 @@ SET estimated_lv = ROUND(
 
 
 #### 🌐 Sub-Region Level RFM Model Table
+<details>
+<summary>Code</summary>
+
 ```sql
 CREATE TABLE sub_region_rfm AS
 SELECT 
@@ -1958,6 +2207,7 @@ SET estimated_lv = ROUND(
   END
 , 2);
 ```
+</details>
 
 |sub_region|region          |countries|customer_types|earliest_purchase_date|last_purchase_date|sub_region_tenure|frequency|monetary|recency|r_score|f_score|m_score|rfm_segment|rfm_class|estimated_lv|
 |----------|----------------|---------|--------------|----------------------|------------------|-----------------|---------|--------|-------|-------|-------|-------|-----------|---------|------------|
@@ -1966,6 +2216,9 @@ SET estimated_lv = ROUND(
 |Eastern Europe|Europe          |Czech Republic, Poland|Retail        |2010-12-03            |2011-11-18        |350              |29       |7920.86 |21     |2      |3      |2      |232        |Other    |2037        |
 
 #### ⌛ Daily FM Model Table
+<details>
+<summary>Code</summary>
+
 ```sql
 CREATE TABLE daily_fm AS
 SELECT 
@@ -1998,6 +2251,7 @@ SET m_class =
     WHEN m_score = 3 THEN 'Low'
   END;
 ```
+</details>
 
 |invoice_date|frequency       |monetary|m_class|
 |------------|----------------|--------|-------|
@@ -2006,6 +2260,9 @@ SET m_class =
 |2010-12-03  |62              |23748.13|Medium |
 
 #### 📆 Monthly FM Model Table
+<details>
+<summary>Code</summary>
+
 ```sql
 CREATE TABLE monthly_fm AS
 SELECT 
@@ -2039,6 +2296,7 @@ SET m_class =
   WHEN scored.m_score = 3 THEN 'Low'
   END;
 ```
+</details>
 
 |month_number|month_name      |frequency|monetary|m_class|
 |------------|----------------|---------|--------|-------|
@@ -2047,6 +2305,9 @@ SET m_class =
 |3           |Mar             |1614     |578806.94|Medium |
 
 #### ❄️ Seasonal FM Model Table
+<details>
+<summary>Code</summary>
+
 ```sql
 CREATE TABLE seasonal_fm AS
 SELECT 
@@ -2060,8 +2321,12 @@ WHERE ei.customer_type IS NOT NULL -- Remove customers not included in Valid Cus
 AND ei.refund_status != 'Full Refund'
 GROUP BY d.season;
 ```
+</details>
 
 #### 🧾 Enriched Transactions
+<details>
+<summary>Code</summary>
+
 ```sql
 CREATE TABLE enriched_transactions AS
   SELECT 
@@ -2096,6 +2361,7 @@ CREATE TABLE enriched_transactions AS
 ALTER TABLE enriched_transactions
 ADD COLUMN id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
 ```
+</details>
 
 |id   |invoice_no      |invoice_date|month_number|month_name|season|invoice_time|customer_id|customer_type   |customer_class|country|region|sub_region     |stock_code|product_level|description                      |quantity|unit_price|usual_price|total_spend|transaction_type|refund_status|
 |-----|----------------|------------|------------|----------|------|------------|-----------|----------------|--------------|-------|------|---------------|----------|-------------|---------------------------------|--------|----------|-----------|-----------|----------------|-------------|
@@ -2104,6 +2370,9 @@ ADD COLUMN id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
 |3    |537626          |2010-12-07  |12          |Dec       |Winter|14:57:00    |12347      |Micro-Wholesaler|Loyal         |Iceland|Europe|Northern Europe|71477     |Standard     |colour glass. star t-light holder|12      |3.25      |3.25       |39.00      |Purchase        |Not Refunded |
 
 #### 🛍️ Product Level RFM Table
+<details>
+<summary>Code</summary>
+
 ```sql
 CREATE TABLE product_rfm AS
 WITH season_cte AS (
@@ -2249,6 +2518,7 @@ SET estimated_value = ROUND(
   END
 , 2);
 ```
+</details>
 
 |stock_code|description     |top_month|top_season|earliest_purchase_date|last_purchase_date|product_tenure|overall_quantity|average_price   |lowest_price|highest_price|usual_price|product_level  |frequency|monetary|recency                          |r_score|f_score|m_score|rfm_segment|rfm_class|estimated_value|
 |----------|----------------|---------|----------|----------------------|------------------|--------------|----------------|----------------|------------|-------------|-----------|---------------|---------|--------|---------------------------------|-------|-------|-------|-----------|---------|---------------|
@@ -2256,9 +2526,13 @@ SET estimated_value = ROUND(
 |10080     |groovy cactus inflatable|Nov      |Autumn    |2011-02-27            |2011-11-21        |267           |291             |0.41            |0.39        |0.85         |0.39       |Low            |21       |114.41  |18                               |4      |4      |4      |444        |Consistent Performer|156.40         |
 |10120     |doggy rubber    |Nov      |Autumn    |2010-12-03            |2011-12-04        |366           |192             |0.21            |0.21        |0.21         |0.21       |Low            |29       |40.32   |5                                |3      |4      |5      |345        |Average  |6.61           |
 
+</details>
+
 ### 🧹 Clean Trailing Characters
 
 **Note** Trailing whitespace and hidden formatting issues were discovered in the dataset at a late stage. While this cleanup should have occurred earlier in the pipeline, corrections will be applied during the final RFM table processing to ensure accurate results.
+<details>
+<summary>Code</summary>
 
 ```sql
 SELECT DISTINCT country
@@ -2286,10 +2560,14 @@ SET countries = REPLACE(REPLACE(TRIM(countries), '\r', ''), '\n', '');
 ```
 **Insight** Hidden Error found in country columns for tables. Cleaned out from rfm level tables.
 </details>
+</details>
 
 ---
 
 ## 🗃️ Cleaned Database
+<details>
+<summary>Code</summary>
+
 ```sql
 -- Cleaned Database
 CREATE DATABASE cleaned_e_commerce;
@@ -2363,6 +2641,8 @@ ADD CONSTRAINT cou_to_sub FOREIGN KEY (sub_region) REFERENCES sub_regions(sub_re
 ALTER TABLE sub_regions
 ADD CONSTRAINT sub_to_reg FOREIGN KEY (region) REFERENCES regions(region);
 ```
+</details>
+
 **Note** A cleaned database was created to streamline analysis. Transactions involving full refunds or customers excluded from the RFM model were removed to ensure more accurate insights.
 
 ![Database Diagram](visuals/diagrams/database_diagram.png)
