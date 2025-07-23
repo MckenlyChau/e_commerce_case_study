@@ -2984,8 +2984,9 @@ LINES TERMINATED BY '\n';
 
 [View the Interactive Tableau Dashboard](https://public.tableau.com/views/e_commerce_case_study_workbook/E-CommerceDashboard-UCIMachineLearningRepositoryUKRetailer2010-2011)
 
-![E Commerce Dashboard](visuals/tableau/e_commerce_dashboard_demo.mp4)
+[![Watch Demo](https://cdn.loom.com/sessions/thumbnails/51e17884d40c430aa8bd2957ce68d04b-with-play.gif)](https://www.loom.com/share/51e17884d40c430aa8bd2957ce68d04b)
 
+> Click the thumbnail to watch a short Loom video walkthrough of the interactive dashboard.
 
 </details>
 ---
