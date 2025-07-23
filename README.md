@@ -2984,9 +2984,19 @@ LINES TERMINATED BY '\n';
 
 [View the Interactive Tableau Dashboard](https://public.tableau.com/views/e_commerce_case_study_workbook/E-CommerceDashboard-UCIMachineLearningRepositoryUKRetailer2010-2011)
 
-[![Watch Demo](https://cdn.loom.com/sessions/thumbnails/51e17884d40c430aa8bd2957ce68d04b-with-play.gif)](https://www.loom.com/share/51e17884d40c430aa8bd2957ce68d04b)
+![Tableau Dashboard](visuals/tableau/dashboard.png)
 
-> Click the thumbnail to watch a short Loom video walkthrough of the interactive dashboard.
+![Revenue Trend](visuals/tableau/revenue_trend.png)
+**Insight** Revenue spikes sharply in March, followed by a notable dip in April—indicating potential seasonal effects or the end of a promotional campaign. From there, revenue climbs steadily throughout Q4, culminating in a December peak likely driven by holiday shopping behavior.
+
+![Churn Trend](visuals/tableau/churn_trend.png)
+**Insight** Customer churn spiked notably in March 2011. Since the UK accounts for the majority of sales, this surge is likely tied to the widespread UK Spending Cut Protests during that period. The resulting economic uncertainty may have impacted consumer confidence and contributed to the increased churn rate.
+
+![Customer Trend](visuals/tableau/customer_trend.png)
+**Insight** Retail shoppers steadily increased their spending throughout the year, showing consistent growth. In contrast, wholesale activity dipped noticeably in October before rebounding sharply—suggesting bulk purchasing in preparation for the holiday season and inventory restocking.
+
+![Item Trend](visuals/tableau/item_revenue.png)
+**Insight** The top-performing product by revenue is the Lunch Bag Red Retrospot, exceeding the next best-seller by over $2,000. The top five items are predominantly giftable or home décor products, highlighting a strong seasonal and lifestyle-driven purchasing trend.
 
 </details>
 ---
