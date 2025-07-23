@@ -2978,13 +2978,7 @@ LINES TERMINATED BY '\n';
 
 ### Tableau Public Dashboard
 
-<iframe 
-  src="https://public.tableau.com/views/e_commerce_case_study_workbook/E-CommerceDashboard-UCIMachineLearningRepositoryUKRetailer2010-2011?:embed=yes&:display_count=yes&:toolbar=yes" 
-  width="1000" 
-  height="800" 
-  frameborder="0" 
-  allowfullscreen>
-</iframe>
+[View the Interactive Tableau Dashboard](https://public.tableau.com/views/e_commerce_case_study_workbook/E-CommerceDashboard-UCIMachineLearningRepositoryUKRetailer2010-2011)
 
 ### Import Files into Tableau
 
