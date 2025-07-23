@@ -2976,13 +2976,15 @@ LINES TERMINATED BY '\n';
 
 **Note** Files exported to 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads' for file clarity and tlicensing to prevent provinding the cleaned tables in the repository. Union used to include column names. Files have to extracted due to limitations in Tableau public.
 
+### Import Files into Tableau
+
+**Note** Set relationships for files IE. transactions invoice_no = invoices invoice_no
+
 ### Tableau Public Dashboard
 
 [View the Interactive Tableau Dashboard](https://public.tableau.com/views/e_commerce_case_study_workbook/E-CommerceDashboard-UCIMachineLearningRepositoryUKRetailer2010-2011)
 
-### Import Files into Tableau
-
-**Note** Set relationships for files IE. transactions invoice_no = invoices invoice_no
+![E Commerce Dashboard](visuals/tableau/e_commerce_dashboard_demo.mp4)
 
 
 </details>
