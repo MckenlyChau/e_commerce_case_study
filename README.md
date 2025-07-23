@@ -2984,18 +2984,18 @@ LINES TERMINATED BY '\n';
 
 [View the Interactive Tableau Dashboard](https://public.tableau.com/views/e_commerce_case_study_workbook/E-CommerceDashboard-UCIMachineLearningRepositoryUKRetailer2010-2011)
 
-![Tableau Dashboard](visuals/tableau/dashboard.png)
+![Tableau Dashboard](visuals/tableau/dashboard.PNG)
 
-![Revenue Trend](visuals/tableau/revenue_trend.png)
+![Revenue Trend](visuals/tableau/revenue_trend.PNG)
 **Insight** Revenue spikes sharply in March, followed by a notable dip in April—indicating potential seasonal effects or the end of a promotional campaign. From there, revenue climbs steadily throughout Q4, culminating in a December peak likely driven by holiday shopping behavior.
 
-![Churn Trend](visuals/tableau/churn_trend.png)
+![Churn Trend](visuals/tableau/churn_trend.PNG)
 **Insight** Customer churn spiked notably in March 2011. Since the UK accounts for the majority of sales, this surge is likely tied to the widespread UK Spending Cut Protests during that period. The resulting economic uncertainty may have impacted consumer confidence and contributed to the increased churn rate.
 
-![Customer Trend](visuals/tableau/customer_trend.png)
+![Customer Trend](visuals/tableau/customer_trend.PNG)
 **Insight** Retail shoppers steadily increased their spending throughout the year, showing consistent growth. In contrast, wholesale activity dipped noticeably in October before rebounding sharply—suggesting bulk purchasing in preparation for the holiday season and inventory restocking.
 
-![Item Trend](visuals/tableau/item_revenue.png)
+![Item Trend](visuals/tableau/item_revenue.PNG)
 **Insight** The top-performing product by revenue is the Lunch Bag Red Retrospot, exceeding the next best-seller by over $2,000. The top five items are predominantly giftable or home décor products, highlighting a strong seasonal and lifestyle-driven purchasing trend.
 
 </details>
