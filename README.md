@@ -13,8 +13,8 @@
 - [📊 Data Exploration](#-data-exploration)
 - [🧠 Data Enrichment](#-data-enrichment)
 - [🗃️ Cleaned Database](#️-cleaned-database)
+- [🖼️ Data Visuals](#️-data-visuals)
 - [📈 Data Analysis](#-data-analysis)
-- [📈 Data Visuals](#-data-visuals)
 - [📄 License](#-license)
 
 ## 📌 Project Goal  
@@ -46,7 +46,7 @@ To replicate:
 <summary>Contents</summary>
 
 - **Database**: MySQL 8.0
-- **Environment**: MySQL Workbench, & Microsoft Excel (365)
+- **Environment**: MySQL Workbench, Tableau Public, 2025.2 & Microsoft Excel (365)
 </details>
 ---
 
@@ -2649,7 +2649,348 @@ ADD CONSTRAINT sub_to_reg FOREIGN KEY (region) REFERENCES regions(region);
 
 ---
 
+## 🖼️ Data Visuals
+<details>
+<summary>Contents</summary>
+
+### Export csv of all tables in cleaned_e_commerce
+<details>
+<summary>Code</summary>
+
+```sql
+(
+  SELECT 'id', 'invoice_no', 'invoice_date', 'month_number', 'month_name', 'season', 'invoice_time',
+         'customer_id', 'customer_type', 'customer_class', 'country', 'region', 'sub_region',
+         'stock_code', 'product_level', 'description', 'quantity', 'unit_price', 'usual_price',
+         'total_spend', 'transaction_type', 'refund_status'
+)
+UNION ALL
+(
+  SELECT 
+    id, invoice_no, invoice_date, month_number, month_name, season, invoice_time,
+    customer_id, customer_type, customer_class, country, region, sub_region,
+    stock_code, product_level, description, quantity, unit_price, usual_price,
+    total_spend, transaction_type, refund_status
+  FROM transactions
+)
+INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/transactions.csv'
+FIELDS TERMINATED BY ',' ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
+
+(
+  SELECT 'invoice_no', 'invoice_date', 'invoice_time', 'customer_id', 'customer_type', 'country', 
+		 'region', 'sub_region', 'overall_quantity', 'overall_spend', 'transaction_types', 'refund_status'
+)
+UNION ALL
+(
+  SELECT 
+    invoice_no, invoice_date, invoice_time, customer_id, customer_type, country, 
+		 region, sub_region, overall_quantity, overall_spend, transaction_types, refund_status 
+  FROM invoices
+)
+INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/invoices.csv'
+FIELDS TERMINATED BY ',' ENCLOSED BY '"' 
+LINES TERMINATED BY '\n';
+
+(
+  SELECT 'customer_id', 'customer_type', 'countries', 'regions', 'sub_regions', 'earliest_purchase_date', 
+         'last_purchase_date', 'customer_tenure', 'frequency', 'monetary', 'recency', 'r_score', 'f_score', 'm_score', 
+		 'rfm_segment', 'rfm_class', 'estimated_clv'
+)
+UNION ALL
+(
+  SELECT 
+    customer_id, customer_type, countries, regions, sub_regions, earliest_purchase_date, 
+         last_purchase_date, customer_tenure, frequency, monetary, recency, r_score, f_score, m_score, 
+		 rfm_segment, rfm_class, estimated_clv
+  FROM customers
+)
+INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/customers.csv'
+FIELDS TERMINATED BY ',' ENCLOSED BY '"' 
+LINES TERMINATED BY '\n';
+
+(
+  SELECT 'country', 'region', 'sub_region', 'customer_types', 'earliest_purchase_date', 
+         'last_purchase_date', 'country_tenure', 'frequency', 'monetary', 'recency', 'r_score', 'f_score', 'm_score', 
+		 'rfm_segment', 'rfm_class', 'estimated_lv'
+)
+UNION ALL
+(
+  SELECT 
+    country, region, sub_region, customer_types, earliest_purchase_date, 
+         last_purchase_date, country_tenure, frequency, monetary, recency, r_score, f_score, m_score, 
+		 rfm_segment, rfm_class, estimated_lv
+  FROM countries
+)
+INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/countries.csv'
+FIELDS TERMINATED BY ',' ENCLOSED BY '"' 
+LINES TERMINATED BY '\n';
+
+(
+  SELECT 'region', 'sub_regions', 'countries', 'customer_types', 'earliest_purchase_date', 
+         'last_purchase_date', 'region_tenure', 'frequency', 'monetary', 'recency', 'r_score', 'f_score', 'm_score', 
+		 'rfm_segment', 'rfm_class', 'estimated_lv'
+)
+UNION ALL
+(
+  SELECT 
+    region, sub_regions, countries, customer_types, earliest_purchase_date, 
+         last_purchase_date, region_tenure, frequency, monetary, recency, r_score, f_score, m_score, 
+		 rfm_segment, rfm_class, estimated_lv
+  FROM regions
+)
+INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/regions.csv'
+FIELDS TERMINATED BY ',' ENCLOSED BY '"' 
+LINES TERMINATED BY '\n';
+
+(
+  SELECT 'sub_region', 'region', 'countries', 'customer_types', 'earliest_purchase_date', 
+         'last_purchase_date', 'sub_region_tenure', 'frequency', 'monetary', 'recency', 'r_score', 'f_score', 'm_score', 
+		 'rfm_segment', 'rfm_class', 'estimated_lv'
+)
+UNION ALL
+(
+  SELECT 
+    sub_region, region, countries, customer_types, earliest_purchase_date, 
+         last_purchase_date, sub_region_tenure, frequency, monetary, recency, r_score, f_score, m_score, 
+		 rfm_segment, rfm_class, estimated_lv
+  FROM sub_regions
+)
+INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/sub_regions.csv'
+FIELDS TERMINATED BY ',' ENCLOSED BY '"' 
+LINES TERMINATED BY '\n';
+
+(
+  SELECT 'invoice_date', 'frequency', 'monetary', 'm_class'
+)
+UNION ALL
+(
+  SELECT 
+    invoice_date, frequency, monetary, m_class
+  FROM dates
+)
+INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/dates.csv'
+FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+
+(
+  SELECT 'month_number', 'month_name', 'frequency', 'monetary', 'm_class'
+)
+UNION ALL
+(
+  SELECT 
+    month_number, month_name, frequency, monetary, m_class
+  FROM months
+)
+INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/months.csv'
+FIELDS TERMINATED BY ',' ENCLOSED BY '"' 
+LINES TERMINATED BY '\n';
+
+(
+  SELECT 'season', 'frequency', 'monetary'
+)
+UNION ALL
+(
+  SELECT 
+    season, frequency, monetary
+  FROM seasons
+)
+INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/seasons.csv'
+FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+
+(
+  SELECT 'stock_code', 'description', 'top_month', 'top_season', 'earliest_purchase_date', 
+         'last_purchase_date', 'product_tenure', 'overall_quantity', 'average_price', 'lowest_price',
+         'highest_price', 'usual_price', 'product_level', 'frequency', 'monetary', 'recency', 'r_score', 'f_score', 'm_score', 
+		 'rfm_segment', 'rfm_class', 'estimated_value'
+)
+UNION ALL
+(
+  SELECT 
+    stock_code, description, top_month, top_season, earliest_purchase_date, 
+         last_purchase_date, product_tenure, overall_quantity, average_price, lowest_price,
+         highest_price, usual_price, product_level, frequency, monetary, recency, r_score, f_score, m_score, 
+		 rfm_segment, rfm_class, estimated_value
+  FROM products
+)
+INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/products.csv'
+FIELDS TERMINATED BY ',' ENCLOSED BY '"' 
+LINES TERMINATED BY '\n';(
+  SELECT 'id', 'invoice_no', 'invoice_date', 'month_number', 'month_name', 'season', 'invoice_time',
+         'customer_id', 'customer_type', 'customer_class', 'country', 'region', 'sub_region',
+         'stock_code', 'product_level', 'description', 'quantity', 'unit_price', 'usual_price',
+         'total_spend', 'transaction_type', 'refund_status'
+)
+UNION ALL
+(
+  SELECT 
+    id, invoice_no, invoice_date, month_number, month_name, season, invoice_time,
+    customer_id, customer_type, customer_class, country, region, sub_region,
+    stock_code, product_level, description, quantity, unit_price, usual_price,
+    total_spend, transaction_type, refund_status
+  FROM transactions
+)
+INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/transactions.csv'
+FIELDS TERMINATED BY ',' ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
+
+(
+  SELECT 'invoice_no', 'invoice_date', 'invoice_time', 'customer_id', 'customer_type', 'country', 
+		 'region', 'sub_region', 'overall_quantity', 'overall_spend', 'transaction_types', 'refund_status'
+)
+UNION ALL
+(
+  SELECT 
+    invoice_no, invoice_date, invoice_time, customer_id, customer_type, country, 
+		 region, sub_region, overall_quantity, overall_spend, transaction_types, refund_status 
+  FROM invoices
+)
+INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/invoices.csv'
+FIELDS TERMINATED BY ',' ENCLOSED BY '"' 
+LINES TERMINATED BY '\n';
+
+(
+  SELECT 'customer_id', 'customer_type', 'countries', 'regions', 'sub_regions', 'earliest_purchase_date', 
+         'last_purchase_date', 'customer_tenure', 'frequency', 'monetary', 'recency', 'r_score', 'f_score', 'm_score', 
+		 'rfm_segment', 'rfm_class', 'estimated_clv'
+)
+UNION ALL
+(
+  SELECT 
+    customer_id, customer_type, countries, regions, sub_regions, earliest_purchase_date, 
+         last_purchase_date, customer_tenure, frequency, monetary, recency, r_score, f_score, m_score, 
+		 rfm_segment, rfm_class, estimated_clv
+  FROM customers
+)
+INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/customers.csv'
+FIELDS TERMINATED BY ',' ENCLOSED BY '"' 
+LINES TERMINATED BY '\n';
+
+(
+  SELECT 'country', 'region', 'sub_region', 'customer_types', 'earliest_purchase_date', 
+         'last_purchase_date', 'country_tenure', 'frequency', 'monetary', 'recency', 'r_score', 'f_score', 'm_score', 
+		 'rfm_segment', 'rfm_class', 'estimated_lv'
+)
+UNION ALL
+(
+  SELECT 
+    country, region, sub_region, customer_types, earliest_purchase_date, 
+         last_purchase_date, country_tenure, frequency, monetary, recency, r_score, f_score, m_score, 
+		 rfm_segment, rfm_class, estimated_lv
+  FROM countries
+)
+INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/countries.csv'
+FIELDS TERMINATED BY ',' ENCLOSED BY '"' 
+LINES TERMINATED BY '\n';
+
+(
+  SELECT 'region', 'sub_regions', 'countries', 'customer_types', 'earliest_purchase_date', 
+         'last_purchase_date', 'region_tenure', 'frequency', 'monetary', 'recency', 'r_score', 'f_score', 'm_score', 
+		 'rfm_segment', 'rfm_class', 'estimated_lv'
+)
+UNION ALL
+(
+  SELECT 
+    region, sub_regions, countries, customer_types, earliest_purchase_date, 
+         last_purchase_date, region_tenure, frequency, monetary, recency, r_score, f_score, m_score, 
+		 rfm_segment, rfm_class, estimated_lv
+  FROM regions
+)
+INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/regions.csv'
+FIELDS TERMINATED BY ',' ENCLOSED BY '"' 
+LINES TERMINATED BY '\n';
+
+(
+  SELECT 'sub_region', 'region', 'countries', 'customer_types', 'earliest_purchase_date', 
+         'last_purchase_date', 'sub_region_tenure', 'frequency', 'monetary', 'recency', 'r_score', 'f_score', 'm_score', 
+		 'rfm_segment', 'rfm_class', 'estimated_lv'
+)
+UNION ALL
+(
+  SELECT 
+    sub_region, region, countries, customer_types, earliest_purchase_date, 
+         last_purchase_date, sub_region_tenure, frequency, monetary, recency, r_score, f_score, m_score, 
+		 rfm_segment, rfm_class, estimated_lv
+  FROM sub_regions
+)
+INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/sub_regions.csv'
+FIELDS TERMINATED BY ',' ENCLOSED BY '"' 
+LINES TERMINATED BY '\n';
+
+(
+  SELECT 'invoice_date', 'frequency', 'monetary', 'm_class'
+)
+UNION ALL
+(
+  SELECT 
+    invoice_date, frequency, monetary, m_class
+  FROM dates
+)
+INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/dates.csv'
+FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+
+(
+  SELECT 'month_number', 'month_name', 'frequency', 'monetary', 'm_class'
+)
+UNION ALL
+(
+  SELECT 
+    month_number, month_name, frequency, monetary, m_class
+  FROM months
+)
+INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/months.csv'
+FIELDS TERMINATED BY ',' ENCLOSED BY '"' 
+LINES TERMINATED BY '\n';
+
+(
+  SELECT 'season', 'frequency', 'monetary'
+)
+UNION ALL
+(
+  SELECT 
+    season, frequency, monetary
+  FROM seasons
+)
+INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/seasons.csv'
+FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+
+(
+  SELECT 'stock_code', 'description', 'top_month', 'top_season', 'earliest_purchase_date', 
+         'last_purchase_date', 'product_tenure', 'overall_quantity', 'average_price', 'lowest_price',
+         'highest_price', 'usual_price', 'product_level', 'frequency', 'monetary', 'recency', 'r_score', 'f_score', 'm_score', 
+		 'rfm_segment', 'rfm_class', 'estimated_value'
+)
+UNION ALL
+(
+  SELECT 
+    stock_code, description, top_month, top_season, earliest_purchase_date, 
+         last_purchase_date, product_tenure, overall_quantity, average_price, lowest_price,
+         highest_price, usual_price, product_level, frequency, monetary, recency, r_score, f_score, m_score, 
+		 rfm_segment, rfm_class, estimated_value
+  FROM products
+)
+INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/products.csv'
+FIELDS TERMINATED BY ',' ENCLOSED BY '"' 
+LINES TERMINATED BY '\n';
+```
+</details>
+
+**Note** Files exported to 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads' for file clarity and tlicensing to prevent provinding the cleaned tables in the repository. Union used to include column names. Files have to extracted due to limitations in Tableau public.
+
+### Tableau Public Dashboard
+
+<div class='tableauPlaceholder' id='viz1753237807950' style='position: relative'><noscript><a href='#'><img alt='🛒 E-Commerce Dashboard - UCI Machine Learning Repository UK Retailer 2010 - 2011  ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;e_&#47;e_commerce_case_study_workbook&#47;E-CommerceDashboard-UCIMachineLearningRepositoryUKRetailer2010-2011&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='e_commerce_case_study_workbook&#47;E-CommerceDashboard-UCIMachineLearningRepositoryUKRetailer2010-2011' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;e_&#47;e_commerce_case_study_workbook&#47;E-CommerceDashboard-UCIMachineLearningRepositoryUKRetailer2010-2011&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1753237807950');                    var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else { vizElement.style.width='100%';vizElement.style.height='2477px';}                     var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+
+### Import Files into Tableau
+
+**Note** Set relationships for files IE. transactions invoice_no = invoices invoice_no
+
+
+</details>
+---
+
 ## 📈 Data Analysis
+
+
 
 ### Next Steps
 - Identify Wholesale and retail trends
@@ -2662,12 +3003,7 @@ ADD CONSTRAINT sub_to_reg FOREIGN KEY (region) REFERENCES regions(region);
 - 📆 Explore monthly and seasonal trends
 - Analyze highest spenders, most invoices, invoice batches, highest quantity items
 
-
----
-
-## 📈 Data Visuals
-
----
+</details>
 
 ## 📄 License
 This project is intended for educational and portfolio use only.
