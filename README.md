@@ -1,8 +1,9 @@
 # 🛒 E-commerce Case Study
 
-## Contents
+## 📚 Contents
 
 - [📌 Project Goal](#-project-goal)
+- [📋 Project Summary](#-project-summary)
 - [📊 Dataset](#-dataset)
 - [🧰 Tools Used](#-tools-used)
 - [🗂️ Database Setup](#-database-setup)
@@ -18,13 +19,22 @@
 - [📄 License](#-license)
 
 ## 📌 Project Goal  
-Analyze transaction data to extract insights into customer purchasing trends and behavior.
+Analyze e-commerce transaction data to uncover customer purchasing behavior, identify key trends, and generate actionable insights to support strategic decision-making in marketing, retention, and product planning.
 
+---
+
+## 📋 Project Summary
+<details>
+<summary>📚 Contents</summary>
+
+[![Project Summary](visuals/pdf/e_commerce_case_study_summary.png)](files/e_commerce_case_study_summary.pdf)
+
+</details>
 ---
 
 ## 📊 Dataset
 <details>
-<summary>Contents</summary>
+<summary>📚 Contents</summary>
   
 - **Source**: [Kaggle - E-commerce Data](https://www.kaggle.com/datasets/carrie1/ecommerce-data/data)  
 - **Original Provider**: UCI Machine Learning Repository  
@@ -43,7 +53,7 @@ To replicate:
 
 ## 🧰 Tools Used
 <details>
-<summary>Contents</summary>
+<summary>📚 Contents</summary>
 
 - **Database**: MySQL 8.0
 - **Environment**: MySQL Workbench, Tableau Public, 2025.2 & Microsoft Excel (365)
@@ -52,7 +62,7 @@ To replicate:
 
 ## 🗂️ Database Setup
 <details>
-<summary>Contents</summary>
+<summary>📚 Contents</summary>
 
 ### 1️⃣ Create the Database
 ```sql
@@ -61,7 +71,7 @@ CREATE DATABASE e_commerce_case_study;
 
 ### 2️⃣ Create the Table
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 CREATE TABLE e_commerce_events (
@@ -81,11 +91,11 @@ CREATE TABLE e_commerce_events (
 
 ## 📥 Data Import
 <details>
-<summary>Contents</summary>
+<summary>📚 Contents</summary>
 
 ### Load Data from CSV
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/data.csv'
@@ -115,7 +125,7 @@ SET customer_id = NULLIF(@customer_id, '');
 
 ## 🧪 Data Audit
 <details>
-<summary>Contents</summary>
+<summary>📚 Contents</summary>
 
 - [📅 Date Range](#-date-range)
 - [📊 High-Level Overview](#-high-level-overview)
@@ -130,7 +140,7 @@ SET customer_id = NULLIF(@customer_id, '');
 
 ### 📅 Date Range
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT MIN(invoice_date), MAX(invoice_date)
@@ -144,7 +154,7 @@ FROM e_commerce_events;
 
 ### 📊 High-Level Overview
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT 
@@ -162,7 +172,7 @@ FROM e_commerce_events;
 
 ### 🔁 Detect Duplicates
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 WITH dup_cte AS (
@@ -183,7 +193,7 @@ FROM dup_cte;
 
 ### ⚠️ NULL Value Checks
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT *
@@ -209,7 +219,7 @@ OR invoice_date IS NULL;
 
 ### 💸 Zero Unit Price
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT *
@@ -226,7 +236,7 @@ WHERE unit_price = 0;
 
 **Insight:** Often paired with NULL `customer_id`; may indicate bundled items.
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT *
@@ -245,7 +255,7 @@ WHERE unit_price = 0 AND customer_id IS NOT NULL;
 
 ### 💰 High-Value Items
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT *
@@ -266,7 +276,7 @@ LIMIT 200;
 
 ### 🔄 Refund Invoices (Start with "C")
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT * FROM e_commerce_events WHERE invoice_no LIKE 'C%';
@@ -283,7 +293,7 @@ SELECT * FROM e_commerce_events WHERE invoice_no LIKE 'C%';
 
 ### 🔻 Negative Quantities Without ‘C’ Invoices
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT * 
@@ -302,7 +312,7 @@ WHERE quantity < 0 AND invoice_no NOT LIKE 'C%';
 
 ### 🧪 Sample Checks
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT * FROM e_commerce_events WHERE stock_code = '85175';
@@ -315,7 +325,7 @@ SELECT * FROM e_commerce_events WHERE stock_code = '21035';
 
 ### 🔣 Non-Item Stock Codes
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT DISTINCT stock_code
@@ -340,7 +350,7 @@ WHERE stock_code NOT REGEXP '[0-9]';
 
 ## 🧹 Data Cleaning
 <details>
-<summary>Contents</summary>
+<summary>📚 Contents</summary>
 
 - [🕒 Convert Date Formats](#-convert-date-formats)
 - [💾 Create Backup Before Modifications](#-create-backup-before-modifications)
@@ -360,7 +370,7 @@ WHERE stock_code NOT REGEXP '[0-9]';
 
 ### 🕒 Convert Date Formats
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 ALTER TABLE e_commerce_events ADD invoice_dt DATETIME;
@@ -373,7 +383,7 @@ ALTER TABLE e_commerce_events CHANGE invoice_dt invoice_date DATETIME;
 
 ### 💾 Create Backup Before Modifications
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 CREATE TABLE e_commerce_events_backup AS
@@ -385,7 +395,7 @@ SELECT * FROM e_commerce_events;
 
 ### 🆔 Add Surrogate Row Identifier
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 ALTER TABLE e_commerce_events
@@ -397,7 +407,7 @@ ADD COLUMN id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
 
 ### 🗑️ Remove Duplicate Records
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 WITH duplicate_ids AS (
@@ -414,7 +424,7 @@ WHERE id NOT IN (
 
 ### 🚫 Remove Rows Without Customer ID
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 DELETE FROM e_commerce_events
@@ -426,7 +436,7 @@ WHERE customer_id IS NULL;
 
 ### 🚫 Remove Free or Promotional Item
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 DELETE FROM e_commerce_events
@@ -438,7 +448,7 @@ WHERE unit_price = 0;
 
 ### 🔄 Categorize Transaction Type
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 ALTER TABLE e_commerce_events ADD transaction_type VARCHAR(20);
@@ -460,7 +470,7 @@ SET transaction_type =
 
 ### 🧼 Clean Stock Code for Non-item Transactions
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 UPDATE e_commerce_events
@@ -473,7 +483,7 @@ WHERE stock_code IN ('POST', 'D', 'M', 'BANK CHARGES', 'DOT', 'CRUK', 'PADS');
 
 ### 🔧 Clean Invoice Numbers
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 UPDATE e_commerce_events
@@ -491,7 +501,7 @@ MODIFY invoice_no INT;
 
 ### ✂️ Normalize Product Descriptions
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 UPDATE e_commerce_events
@@ -501,7 +511,7 @@ SET description = LOWER(TRIM(description));
 
 ### ⏱️ Separate Date and Time Fields
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 ALTER TABLE e_commerce_events
@@ -523,7 +533,7 @@ CHANGE invoice_time_only invoice_time TIME;
 
 ### 🧹 Column Order Cleanup
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 ALTER TABLE e_commerce_events 
@@ -539,7 +549,7 @@ MODIFY COLUMN country VARCHAR(50) AFTER customer_id;
 
 ### ✅ Confirm Column Data Types
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 DESCRIBE e_commerce_events;
@@ -550,7 +560,7 @@ DESCRIBE e_commerce_events;
 
 ### 🧾 High-Level Metrics After Cleaning
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT 
@@ -568,7 +578,7 @@ FROM e_commerce_events;
 
 ### 🚀 Add Indexes for Query Optimization
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 CREATE INDEX idx_customer_id ON e_commerce_events(customer_id);
@@ -584,7 +594,7 @@ CREATE INDEX idx_invoice_date ON e_commerce_events(invoice_date);
 
 ## 🔄 Data Manipulation
 <details>
-<summary>Contents</summary>
+<summary>📚 Contents</summary>
 
 - [➕ Calculate and Add Total Spend](#-calculate-and-add-total-spend)
 - [🧾 Invoice Summary Table](#-invoice-summary-table)
@@ -598,7 +608,7 @@ CREATE INDEX idx_invoice_date ON e_commerce_events(invoice_date);
 
 ### ➕ Calculate and Add Total Spend
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 ALTER TABLE e_commerce_events ADD total_spend DECIMAL(10,2);
@@ -611,7 +621,7 @@ MODIFY COLUMN total_spend DECIMAL(10,2) AFTER unit_price;
 
 ### 🧾 Invoice Summary Table
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 CREATE TABLE invoices AS
@@ -638,7 +648,7 @@ ORDER BY invoice_no;
 
 ### 📆 Daily Performance Overview
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 CREATE TABLE dates AS
@@ -665,7 +675,7 @@ ORDER BY invoice_date;
 
 ###	👥 Customer Activity Summary
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 CREATE TABLE customers AS
@@ -695,7 +705,7 @@ ORDER BY customer_id;
 
 ### ✅ Active Customers Non-Zero Spend
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 CREATE TABLE valid_customers AS
@@ -716,7 +726,7 @@ AND overall_quantity > 0;
 
 ### 📦 Product Master Table
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 CREATE TABLE products AS
@@ -771,7 +781,7 @@ ORDER BY td.stock_code;
 
 ### 🌍 Country-Level Aggregates
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 CREATE TABLE countries AS
@@ -800,7 +810,7 @@ ORDER BY country;
 
 ### 🔄 Transaction Type Breakdown
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 CREATE TABLE transaction_types AS
@@ -824,7 +834,7 @@ ORDER BY transaction_type;
 
 ### 🔑 Add Primary Keys to Summary Tables
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 ALTER TABLE invoices ADD PRIMARY KEY (invoice_no);
@@ -840,7 +850,7 @@ ALTER TABLE transaction_types ADD PRIMARY KEY (transaction_type);
 
 ## 📊 Data Exploration
 <details>
-<summary>Contents</summary>
+<summary>📚 Contents</summary>
 
 - [👥 EX-Customers](#-ex-customers)
 - [📦 EX-Products](#-ex-products)
@@ -851,14 +861,14 @@ ALTER TABLE transaction_types ADD PRIMARY KEY (transaction_type);
 
 ### 👥 EX-Customers
 <details>
-<summary>Contents</summary>
+<summary>📚 Contents</summary>
 
 - [💰 Top Customer Spenders](#-top-customer-spenders)
 - [🔍 Sample Top Customers](#-sample-top-customers)
 
 #### 💰 Top Customer Spenders
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT customer_id,
@@ -885,7 +895,7 @@ LIMIT 5;
 
 ### 🔍 Sample Top Customers
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT * FROM e_commerce_events WHERE customer_id = 14646;
@@ -899,7 +909,7 @@ SELECT * FROM e_commerce_events WHERE customer_id = 17450;
 
 ### 📦 EX-Products
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 
 - [🏆 Top Products by Revenue](#-top-products-by-revenue)
@@ -907,7 +917,7 @@ SELECT * FROM e_commerce_events WHERE customer_id = 17450;
 
 #### 🏆 Top Products by Revenue
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT stock_code,
@@ -933,7 +943,7 @@ ORDER BY overall_spend DESC;
 
 #### 📦 Top Products by Volume
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT stock_code,
@@ -962,14 +972,14 @@ ORDER BY overall_quantity DESC;
 
 ### 🧾 EX-Invoices
 <details>
-<summary>Contents</summary>
+<summary>📚 Contents</summary>
 
 - [📊 Largest Orders by Quantity](#-largest-orders-by-quantitys)
 - [↩️ Largest Refunds by Quantity](#️-largest-refunds-by-quantity)
 
 #### 📊 Largest Orders by Quantitys
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT * 
@@ -986,7 +996,7 @@ ORDER BY overall_quantity DESC;
 
 #### ↩️ Largest Refunds by Quantity
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT * 
@@ -1006,7 +1016,7 @@ ORDER BY overall_quantity;
 
 ### 🌍 EX-Country
 <details>
-<summary>Contents</summary>
+<summary>📚 Contents</summary>
 
 - [🌍 Top Countries by Invoices](#-top-countries-by-invoices)
 - [👥 Top Countries by Customers](#-top-countries-by-customers)
@@ -1016,7 +1026,7 @@ ORDER BY overall_quantity;
 
 #### 🌍 Top Countries by Invoices
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT country,
@@ -1038,7 +1048,7 @@ ORDER BY invoice_count DESC;
 
 #### 👥 Top Countries by Customers
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT country,
@@ -1060,7 +1070,7 @@ ORDER BY customer_count DESC;
 
 #### 📦 Top Countries by Units Sold
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT country,
@@ -1082,7 +1092,7 @@ ORDER BY overall_quantity DESC;
 
 #### 💸 Top Countries by Total Spend
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT country,
@@ -1104,7 +1114,7 @@ ORDER BY overall_spend DESC;
 
 #### 🧾 Top Countries by Avg. Spend per Customer
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT country,
@@ -1129,7 +1139,7 @@ ORDER BY avg_spend_per_customer DESC;
 
 ### 📅 EX-Dates
 <details>
-<summary>Contents</summary>
+<summary>📚 Contents</summary>
 
 - [🗓️ Dates with Most Invoices](#️-dates-with-most-invoices)
 - [👤 Dates with Most Customers](#-dates-with-most-customers)
@@ -1138,7 +1148,7 @@ ORDER BY avg_spend_per_customer DESC;
 
 #### 🗓️ Dates with Most Invoices
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT invoice_date,
@@ -1159,7 +1169,7 @@ ORDER BY invoice_count DESC;
 
 #### 👤 Dates with Most Customers
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT invoice_date,
@@ -1180,7 +1190,7 @@ ORDER BY customer_count DESC;
 
 #### 📈 Dates with Highest Sales Volume
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT invoice_date,
@@ -1201,7 +1211,7 @@ ORDER BY overall_quantity DESC;
 
 #### 💳 Dates with Highest Revenue
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT invoice_date,
@@ -1227,7 +1237,7 @@ ORDER BY overall_spend DESC;
 
 ## 🧠 Data Enrichment
 <details>
-<summary>Contents</summary>
+<summary>📚 Contents</summary>
 
 - [👥 EN-Customers](#-en-customers)
 - [📦 EN-Product](#-en-product)
@@ -1239,7 +1249,7 @@ ORDER BY overall_spend DESC;
 
 ### 👥 EN-Customers
 <details>
-<summary>Contents</summary>
+<summary>📚 Contents</summary>
 
 - [🧠 Customer Segmentation by Type](#-customer-segmentation-by-type)
 - [📈 Customer Segmentation by Engagement](#-customer-segmentation-by-engagement)
@@ -1247,7 +1257,7 @@ ORDER BY overall_spend DESC;
 
 #### 🧠 Customer Segmentation by Type
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 ALTER TABLE valid_customers
@@ -1271,7 +1281,7 @@ SET customer_type =
 
 #### 📈 Customer Segmentation by Engagement
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 ALTER TABLE valid_customers
@@ -1293,7 +1303,7 @@ END;
 
 #### 🧮 Add CLV Columns
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 ALTER TABLE valid_customers
@@ -1327,13 +1337,13 @@ SET estimated_clv =
 
 ### 📦 EN-Product
 <details>
-<summary>Contents</summary>
+<summary>📚 Contents</summary>
 
 - [💰 Product Tier Assignment by Price](#-product-tier-assignment-by-price)
 
 #### 💰 Product Tier Assignment by Price
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 ALTER TABLE products
@@ -1358,7 +1368,7 @@ SET product_level =
 
 ### 🗓️ EN-Dates
 <details>
-<summary>Contents</summary>
+<summary>📚 Contents</summary>
 
 - [📅 Add Month and Month Number](#-add-month-and-month-number)
 - [📊 Monthly Trends Summary Table](#-monthly-trends-summary-table)
@@ -1367,7 +1377,7 @@ SET product_level =
 
 #### 📅 Add Month and Month Number
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 ALTER TABLE dates
@@ -1389,7 +1399,7 @@ MODIFY COLUMN month_name VARCHAR(10) AFTER month_number;
 
 #### 📊 Monthly Trends Summary Table
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 CREATE TABLE months AS
@@ -1415,7 +1425,7 @@ ALTER TABLE months ADD PRIMARY KEY (month_number);
 
 #### 🌦️ Seasonal Data Columns
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 ALTER TABLE dates
@@ -1448,7 +1458,7 @@ MODIFY COLUMN season VARCHAR(10) AFTER month_name;
 
 #### 🗂️ Seasonal Summary Table
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 CREATE TABLE seasons AS
@@ -1487,7 +1497,7 @@ ALTER TABLE seasons ADD PRIMARY KEY (season);
 
 ### 🧾 EN-Invoices
 <details>
-<summary>Contents</summary>
+<summary>📚 Contents</summary>
 
 - [💸 Refund Summary Table](#-refund-summary-table)
 - [📜 Historic Refunds Table](#-historic-refunds-table)
@@ -1495,7 +1505,7 @@ ALTER TABLE seasons ADD PRIMARY KEY (season);
 
 #### 💸 Refund Summary Table
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 -- Keep best-matched refund per purchase
@@ -1513,7 +1523,7 @@ ALTER TABLE refunds ADD PRIMARY KEY (purchase_invoice);
 
 #### 📜 Historic Refunds Table
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 CREATE TABLE historic_refunds AS
@@ -1544,7 +1554,7 @@ ALTER TABLE historic_refunds ADD PRIMARY KEY (invoice_no);
 
 #### 📑 Enriched Invoice Summary
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 CREATE TABLE enriched_invoices AS
@@ -1587,7 +1597,7 @@ ALTER TABLE enriched_invoices ADD PRIMARY KEY (invoice_no);
 
 ### 🌍 EN-Country
 <details>
-<summary>Contents</summary>
+<summary>📚 Contents</summary>
 
 - [🗺️ Import Region Data](#️-import-region-data)
 - [🏳️ Enriched Countries Table](#️-enriched-countries-table)
@@ -1598,7 +1608,7 @@ ALTER TABLE enriched_invoices ADD PRIMARY KEY (invoice_no);
 
 #### 🗺️ Import Region Data
 <details>
-<summary>Contents</summary>
+<summary>📚 Contents</summary>
 
 - [🔽 Download Dataset](#-download-dataset)
 - [🛠️ Preprocess Dataset in Excel](#️-preprocess-dataset-in-excel)
@@ -1612,7 +1622,7 @@ C:\ProgramData\MySQL\MySQL Server 8.0\Uploads\unsd.csv
 ##### 🛠️ Preprocess Dataset in Excel
 Before importing, apply the following changes:
 <details>
-<summary>Contents</summary>
+<summary>📚 Contents</summary>
 
 - [🧭 Standardize Country Names](#-standardize-country-names)
 - [🧹 Column Cleanup](#-column-cleanup)
@@ -1652,7 +1662,7 @@ Update localized names for compatibility with your primary dataset:
 
 ##### 🗂️ UNSD Classification Table
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 CREATE TABLE unsd_classifications (
@@ -1682,7 +1692,7 @@ IGNORE 1 ROWS(
 
 #### 🏳️ Enriched Countries Table
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 CREATE TABLE enriched_countries AS
@@ -1713,7 +1723,7 @@ ALTER TABLE enriched_countries ADD PRIMARY KEY (country_name);
 
 #### 🏞️ Region Summary Table
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 CREATE TABLE regions AS 
@@ -1743,7 +1753,7 @@ ALTER TABLE regions ADD PRIMARY KEY (region_name);
 
 #### 🧭 Sub-Region Summary Table
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 CREATE TABLE sub_regions AS 
@@ -1773,7 +1783,7 @@ ALTER TABLE sub_regions ADD PRIMARY KEY (sub_region_name);
 
 #### 📌 Enrich Valid Customers with Region Data
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 ALTER TABLE valid_customers
@@ -1804,7 +1814,12 @@ ALTER TABLE valid_customers
 MODIFY COLUMN regions VARCHAR(100) AFTER countries,
 MODIFY COLUMN sub_regions VARCHAR(100) AFTER regions;
 ```
+</details>
+
 #### 🧩 Enrich Invoices Table with Region Data
+<details>
+<summary>📟 Code</summary>
+
 ```sql
 ALTER TABLE enriched_invoices
 ADD COLUMN region VARCHAR(20),
@@ -1833,7 +1848,7 @@ UPDATE enriched_invoices
 
 ### 📦 Finalized Tables
 <details>
-<summary>Contents</summary>
+<summary>📚 Contents</summary>
 
 - [📊 RFM Model Table](#-rfm-model-table)
 - [🗺️ Country Level RFM Model Table](#️-country-level-rfm-model-table)
@@ -1847,7 +1862,7 @@ UPDATE enriched_invoices
 
 #### 📊 RFM Model Table
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 -- RFM Model Table
@@ -1944,7 +1959,7 @@ Customers with a tenure of 0 (one-time purchasers) or those classified as Churne
 
 #### 🗺️ Country Level RFM Model Table
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 CREATE TABLE country_rfm AS
@@ -2036,7 +2051,7 @@ SET estimated_lv = ROUND(
 
 #### 🌍 Region Level RFM Model Table
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 CREATE TABLE region_rfm AS
@@ -2127,7 +2142,7 @@ SET estimated_lv = ROUND(
 
 #### 🌐 Sub-Region Level RFM Model Table
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 CREATE TABLE sub_region_rfm AS
@@ -2217,7 +2232,7 @@ SET estimated_lv = ROUND(
 
 #### ⌛ Daily FM Model Table
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 CREATE TABLE daily_fm AS
@@ -2261,7 +2276,7 @@ SET m_class =
 
 #### 📆 Monthly FM Model Table
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 CREATE TABLE monthly_fm AS
@@ -2306,7 +2321,7 @@ SET m_class =
 
 #### ❄️ Seasonal FM Model Table
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 CREATE TABLE seasonal_fm AS
@@ -2325,7 +2340,7 @@ GROUP BY d.season;
 
 #### 🧾 Enriched Transactions
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 CREATE TABLE enriched_transactions AS
@@ -2371,7 +2386,7 @@ ADD COLUMN id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
 
 #### 🛍️ Product Level RFM Table
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 CREATE TABLE product_rfm AS
@@ -2532,7 +2547,7 @@ SET estimated_value = ROUND(
 
 **Note** Trailing whitespace and hidden formatting issues were discovered in the dataset at a late stage. While this cleanup should have occurred earlier in the pipeline, corrections will be applied during the final RFM table processing to ensure accurate results.
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 SELECT DISTINCT country
@@ -2566,7 +2581,7 @@ SET countries = REPLACE(REPLACE(TRIM(countries), '\r', ''), '\n', '');
 
 ## 🗃️ Cleaned Database
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 -- Cleaned Database
@@ -2651,11 +2666,11 @@ ADD CONSTRAINT sub_to_reg FOREIGN KEY (region) REFERENCES regions(region);
 
 ## 🖼️ Data Visuals
 <details>
-<summary>Contents</summary>
+<summary>📚 Contents</summary>
 
 ### Export csv of all tables in cleaned_e_commerce
 <details>
-<summary>Code</summary>
+<summary>📟 Code</summary>
 
 ```sql
 (
@@ -2990,7 +3005,9 @@ LINES TERMINATED BY '\n';
 **Insight** Revenue spikes sharply in March, followed by a notable dip in April—indicating potential seasonal effects or the end of a promotional campaign. From there, revenue climbs steadily throughout Q4, culminating in a December peak likely driven by holiday shopping behavior.
 
 ![Churn Trend](visuals/tableau/churn_trend.PNG)
-**Insight** Customer churn spiked notably in March 2011. Since the UK accounts for the majority of sales, this surge is likely tied to the widespread UK Spending Cut Protests during that period. The resulting economic uncertainty may have impacted consumer confidence and contributed to the increased churn rate.
+**Insight** Customer churn spiked notably in **March 2011**. Since the **UK accounts for the majority of sales**, this surge is likely tied to the widespread **UK spending cut protests** during that period. The resulting economic uncertainty may have impacted consumer confidence and contributed to the increased churn rate.
+
+For context, see this contemporaneous news coverage: [The Guardian – *Anti-cuts march swells to 400,000*](https://www.theguardian.com/world/2011/mar/26/anti-cuts-march-swells-400000).
 
 ![Customer Trend](visuals/tableau/customer_trend.PNG)
 **Insight** Retail shoppers steadily increased their spending throughout the year, showing consistent growth. In contrast, wholesale activity dipped noticeably in October before rebounding sharply—suggesting bulk purchasing in preparation for the holiday season and inventory restocking.
@@ -3002,19 +3019,12 @@ LINES TERMINATED BY '\n';
 ---
 
 ## 📈 Data Analysis
+<details>
+<summary>📚 Contents</summary>
 
+### Executive Summary
 
-
-### Next Steps
-- Identify Wholesale and retail trends
-- Identify High end and Low end trends
-- Identify Country Level and RegionalLevel trends
-- Identify Monthly and Seasonal trends
-- 🥇 Analyze top-selling products Y
-- 🌍 Assess revenue by country Y
-- 🔁 Track customer retention and frequency
-- 📆 Explore monthly and seasonal trends
-- Analyze highest spenders, most invoices, invoice batches, highest quantity items
+[![Executive Summary](visuals/pdf/e_commerce_executive_summary.png)](files/e_commerce_executive_summary.pdf)
 
 </details>
 
