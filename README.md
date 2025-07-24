@@ -64,9 +64,13 @@ To replicate:
 <summary>📚 Contents</summary>
 
 ### 1️⃣ Create the Database
+<details>
+<summary>📟 Code</summary>
+
 ```sql
 CREATE DATABASE e_commerce_case_study;
 ```
+</details>
 
 ### 2️⃣ Create the Table
 <details>
