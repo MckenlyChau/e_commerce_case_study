@@ -14,7 +14,6 @@
 - [📊 Data Exploration](#-data-exploration)
 - [🧠 Data Enrichment](#-data-enrichment)
 - [🗃️ Cleaned Database](#️-cleaned-database)
-- [🖼️ Data Visuals](#️-data-visuals)
 - [📈 Data Analysis](#-data-analysis)
 - [📄 License](#-license)
 
@@ -2664,7 +2663,7 @@ ADD CONSTRAINT sub_to_reg FOREIGN KEY (region) REFERENCES regions(region);
 
 ---
 
-## 🖼️ Data Visuals
+## 📈 Data Analysis
 <details>
 <summary>📚 Contents</summary>
 
@@ -3014,13 +3013,6 @@ For context, see this contemporaneous news coverage: [The Guardian – *Anti-cut
 
 ![Item Trend](visuals/tableau/item_revenue.PNG)
 **Insight** The top-performing product by revenue is the Lunch Bag Red Retrospot, exceeding the next best-seller by over $2,000. The top five items are predominantly giftable or home décor products, highlighting a strong seasonal and lifestyle-driven purchasing trend.
-
-</details>
----
-
-## 📈 Data Analysis
-<details>
-<summary>📚 Contents</summary>
 
 ### Executive Summary
 
