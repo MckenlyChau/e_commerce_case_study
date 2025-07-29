@@ -6,7 +6,7 @@
 - [📋 Project Outline](#-project-outline)
 - [📊 Dataset](#-dataset)
 - [🧰 Tools Used](#-tools-used)
-- [🗂️ Database Setup](#-database-setup)
+- [🗂️ Database Setup](#️-database-setup)
 - [🧪 Data Audit](#-data-audit)
 - [🧹 Data Cleaning](#-data-cleaning)
 - [🔄 Data Manipulation](#-data-manipulation)
@@ -46,7 +46,7 @@ To replicate:
 
 ## 🗂️ Database Setup
 <details>
-<summary>📚 Contents - Database Creation and Data Import</summary>
+<summary>📚 Contents – Building the Database and Importing Raw Data</summary>
 
 ### 1️⃣ Create the Database
 ```sql
@@ -93,7 +93,7 @@ SET customer_id = NULLIF(@customer_id, '');
 
 ## 🧪 Data Audit
 <details>
-<summary>📚 Contents - Thorough Data Auditing of E-Commerce Events</summary>
+<summary>📚 Contents – In-Depth Validation and Auditing of E-Commerce Event Data</summary>
 
 - [📅 Date Range](#-date-range)
 - [📊 High-Level Overview](#-high-level-overview)
@@ -317,7 +317,7 @@ WHERE stock_code NOT REGEXP '[0-9]';
 
 ## 🧹 Data Cleaning
 <details>
-<summary>📚 Contents - Initial Data Cleaning and Data Reformatting</summary>
+<summary>📚 Contents – Preliminary Cleaning and Structural Reformatting of Data</summary>
 
 - [🕒 Convert Date Formats](#-convert-date-formats)
 - [💾 Create Backup Before Modifications](#-create-backup-before-modifications)
@@ -560,7 +560,7 @@ CREATE INDEX idx_invoice_date ON e_commerce_events(invoice_date);
 
 ## 🔄 Data Manipulation
 <details>
-<summary>📚 Contents - Organizing Data Structure and Initial Data Transformation</summary>
+<summary>📚 Contents – Organizing Schema and Applying Foundational Data Transformations</summary>
 
 - [➕ Calculate and Add Total Spend](#-calculate-and-add-total-spend)
 - [🧾 Invoice Summary Table](#-invoice-summary-table)
@@ -815,7 +815,7 @@ ALTER TABLE transaction_types ADD PRIMARY KEY (transaction_type);
 
 ## 📊 Data Exploration
 <details>
-<summary>📚 Contents - Examination of Structured Data and Cursory Analysis</summary>
+<summary>📚 Contents – Reviewing Cleaned Data and Conducting Early-Stage Analysis</summary>
 
 - [👥 EX-Customers](#-ex-customers)
 - [📦 EX-Products](#-ex-products)
@@ -1202,7 +1202,7 @@ ORDER BY overall_spend DESC;
 
 ## 🧠 Data Enrichment
 <details>
-<summary>📚 Contents - Enriched Data Structures and RFM Level Database Building</summary>
+<summary>📚 Contents – Creating Enriched Data Models with RFM Segmentation Integration</summary>
 
 - [👥 EN-Customers](#-en-customers)
 - [📦 EN-Product](#-en-product)
@@ -2627,7 +2627,7 @@ ADD CONSTRAINT sub_to_reg FOREIGN KEY (region) REFERENCES regions(region);
 
 ## 📈 Data Analysis
 <details>
-<summary>📚 Contents - Tableau Dashboard and Executive Level Summary</summary>
+<summary>📚 Contents – Interactive Tableau Dashboard and Strategic Summary for Stakeholders</summary>
 
 ### Export csv of all tables in cleaned_e_commerce
 <details>
