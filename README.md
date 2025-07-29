@@ -3,11 +3,10 @@
 ## 📚 Contents
 
 - [📌 Project Goal](#-project-goal)
-- [📋 Project Summary](#-project-summary)
+- [📋 Project Outline](#-project-outline)
 - [📊 Dataset](#-dataset)
 - [🧰 Tools Used](#-tools-used)
 - [🗂️ Database Setup](#-database-setup)
-- [📥 Data Import](#-data-import)
 - [🧪 Data Audit](#-data-audit)
 - [🧹 Data Cleaning](#-data-cleaning)
 - [🔄 Data Manipulation](#-data-manipulation)
@@ -20,20 +19,12 @@
 ## 📌 Project Goal  
 Analyze e-commerce transaction data to uncover customer purchasing behavior, identify key trends, and generate actionable insights to support strategic decision-making in marketing, retention, and product planning.
 
----
 
-## 📋 Project Summary
-<details>
-<summary>📚 Contents</summary>
+## 📋 Project Outline
 
-[![Project Summary](visuals/pdf/e_commerce_case_study_summary.png)](files/e_commerce_case_study_summary.pdf)
-
-</details>
----
+[![Project Outline](visuals/pdf/e_commerce_case_study_outline.png)](files/e_commerce_case_study_outline.pdf)
 
 ## 📊 Dataset
-<details>
-<summary>📚 Contents</summary>
   
 - **Source**: [Kaggle - E-commerce Data](https://www.kaggle.com/datasets/carrie1/ecommerce-data/data)  
 - **Original Provider**: UCI Machine Learning Repository  
@@ -47,35 +38,22 @@ To replicate:
 2. Export the Excel file as a **UTF-8 CSV**.
 3. Move the `.csv` to:  
    `C:\ProgramData\MySQL\MySQL Server 8.0\Uploads`
-</details>
----
 
 ## 🧰 Tools Used
-<details>
-<summary>📚 Contents</summary>
 
 - **Database**: MySQL 8.0
 - **Environment**: MySQL Workbench, Tableau Public, 2025.2 & Microsoft Excel (365)
-</details>
----
 
 ## 🗂️ Database Setup
 <details>
-<summary>📚 Contents</summary>
+<summary>📚 Contents - Database Creation and Data Import</summary>
 
 ### 1️⃣ Create the Database
-<details>
-<summary>📟 Code</summary>
-
 ```sql
 CREATE DATABASE e_commerce_case_study;
 ```
-</details>
 
 ### 2️⃣ Create the Table
-<details>
-<summary>📟 Code</summary>
-
 ```sql
 CREATE TABLE e_commerce_events (
   invoice_no VARCHAR(20),
@@ -88,18 +66,8 @@ CREATE TABLE e_commerce_events (
   country VARCHAR(50)
 );
 ```
-</details>
-</details>
----
 
-## 📥 Data Import
-<details>
-<summary>📚 Contents</summary>
-
-### Load Data from CSV
-<details>
-<summary>📟 Code</summary>
-
+### 📥 Data Import
 ```sql
 LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/data.csv'
 INTO TABLE e_commerce_events
@@ -111,8 +79,6 @@ IGNORE 1 ROWS
  unit_price, @customer_id, country)
 SET customer_id = NULLIF(@customer_id, '');
 ```
-</details>
-
 |invoice_no|stock_code|description                       |quantity|unit_price|total_spend|customer_id|country        |invoice_date       |
 |----------|----------|----------------------------------|--------|----------|-----------|-----------|---------------|-------------------|
 |536365    |85123A    |WHITE HANGING HEART T-LIGHT HOLDER|6       |2.55      |15.30      |17850      |United Kingdom |2010-12-01 08:26:00|
@@ -123,12 +89,11 @@ SET customer_id = NULLIF(@customer_id, '');
 - `customer_id` is set to `NULL` if empty
 - Some `unit_price` values below 0.01 were truncated
 - File must be encoded in **UTF-8**
----
 </details>
 
 ## 🧪 Data Audit
 <details>
-<summary>📚 Contents</summary>
+<summary>📚 Contents - Thorough Data Auditing of E-Commerce Events</summary>
 
 - [📅 Date Range](#-date-range)
 - [📊 High-Level Overview](#-high-level-overview)
@@ -349,11 +314,10 @@ WHERE stock_code NOT REGEXP '[0-9]';
 
 ***Insight:** Includes POST(postage), D(discount), M(manual), BANK CHARGES, DOT(dotcom postage), CRUK(cruk commission), and PADS
 </details>
----
 
 ## 🧹 Data Cleaning
 <details>
-<summary>📚 Contents</summary>
+<summary>📚 Contents - Initial Data Cleaning and Data Reformatting</summary>
 
 - [🕒 Convert Date Formats](#-convert-date-formats)
 - [💾 Create Backup Before Modifications](#-create-backup-before-modifications)
@@ -593,11 +557,10 @@ CREATE INDEX idx_invoice_date ON e_commerce_events(invoice_date);
 
 **Insight:** for ease of use when searching
 </details>
----
 
 ## 🔄 Data Manipulation
 <details>
-<summary>📚 Contents</summary>
+<summary>📚 Contents - Organizing Data Structure and Initial Data Transformation</summary>
 
 - [➕ Calculate and Add Total Spend](#-calculate-and-add-total-spend)
 - [🧾 Invoice Summary Table](#-invoice-summary-table)
@@ -849,11 +812,10 @@ ALTER TABLE transaction_types ADD PRIMARY KEY (transaction_type);
 ```
 </details>
 </details>
----
 
 ## 📊 Data Exploration
 <details>
-<summary>📚 Contents</summary>
+<summary>📚 Contents - Examination of Structured Data and Cursory Analysis</summary>
 
 - [👥 EX-Customers](#-ex-customers)
 - [📦 EX-Products](#-ex-products)
@@ -912,7 +874,7 @@ SELECT * FROM e_commerce_events WHERE customer_id = 17450;
 
 ### 📦 EX-Products
 <details>
-<summary>📟 Code</summary>
+<summary>📚 Contents</summary>
 
 
 - [🏆 Top Products by Revenue](#-top-products-by-revenue)
@@ -1240,7 +1202,7 @@ ORDER BY overall_spend DESC;
 
 ## 🧠 Data Enrichment
 <details>
-<summary>📚 Contents</summary>
+<summary>📚 Contents - Enriched Data Structures and RFM Level Database Building</summary>
 
 - [👥 EN-Customers](#-en-customers)
 - [📦 EN-Product](#-en-product)
@@ -2580,8 +2542,6 @@ SET countries = REPLACE(REPLACE(TRIM(countries), '\r', ''), '\n', '');
 </details>
 </details>
 
----
-
 ## 🗃️ Cleaned Database
 <details>
 <summary>📟 Code</summary>
@@ -2665,11 +2625,9 @@ ADD CONSTRAINT sub_to_reg FOREIGN KEY (region) REFERENCES regions(region);
 
 ![Database Diagram](visuals/diagrams/database_diagram.png)
 
----
-
 ## 📈 Data Analysis
 <details>
-<summary>📚 Contents</summary>
+<summary>📚 Contents - Tableau Dashboard and Executive Level Summary</summary>
 
 ### Export csv of all tables in cleaned_e_commerce
 <details>
