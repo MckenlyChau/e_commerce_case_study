@@ -1198,7 +1198,6 @@ ORDER BY overall_spend DESC;
 **Insight:** The highest overall quantity and total spend are concentrated in the latter half of the year, indicating a potential seasonal trend. This pattern suggests increased purchasing activity during certain months, likely related to holidays or year-end demand. Further analysis by month and season will help validate and understand these trends.
 </details>
 </details>
----
 
 ## 🧠 Data Enrichment
 <details>
