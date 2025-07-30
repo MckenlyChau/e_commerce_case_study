@@ -2949,7 +2949,7 @@ LINES TERMINATED BY '\n';
 ```
 </details>
 
-**Note** Files exported to 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads' for file clarity and tlicensing to prevent provinding the cleaned tables in the repository. Union used to include column names. Files have to extracted due to limitations in Tableau public.
+**Note** Files were exported to 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads' to maintain file clarity and comply with licensing restrictions, which prevent the inclusion of cleaned tables directly in the repository. A UNION operation was used to retain column headers during export. Due to limitations in Tableau Public, these files must be extracted manually for use.
 
 ### Import Files into Tableau
 
